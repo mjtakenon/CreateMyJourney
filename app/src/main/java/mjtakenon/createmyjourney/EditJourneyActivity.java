@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -38,8 +39,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeMap;
 
 public class EditJourneyActivity extends AppCompatActivity {
 
@@ -47,26 +54,61 @@ public class EditJourneyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journey);
-        Button submitButton = (Button) findViewById(R.id.buttonSubmit);
-        submitButton.setOnClickListener(new View.OnClickListener() {
+
+
+        //レイアウト作成ボタン
+        Button buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //レイアウトを保存し元の画面に戻る?
                 finish();
+            }
+        });
+
+        //更新ボタン
+        Button buttonReflesh = (Button) findViewById(R.id.buttonReflesh);
+        buttonReflesh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
+                layoutPlan.removeAllViews();
+
+                Iterator<String> it = mapTimeToPlace.keySet().iterator();
+                while (it.hasNext()) {
+                    String key = it.next();
+                    addPlaceRowByWord(layoutPlan,key,mapTimeToPlace.get(key));
+                }
             }
         });
 
         Intent intent = this.getIntent();
 
-        //時刻と場所イメージ、場所を縦に積んでく
+        //タイムラインは時刻を左、場所画像と場所を右にセットで積んでく
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
 
-        //出発地
-        addPlaceRowByIntent(intent,layoutPlan,"textTimeBegin","textPlaceBegin");
+        //出発地、目的地、到着地を追加
+        if(intent.getStringExtra("textPlaceBegin") != null){
+            mapTimeToPlace.put(intent.getStringExtra("textTimeBegin"),intent.getStringExtra("textPlaceBegin"));
+        }
+        if(intent.getStringExtra("textPlaceDist") != null) {
+            //intent.getStringExtra("textTimeBegin")からの所要時刻で計算したいな
+            mapTimeToPlace.put("12:00",intent.getStringExtra("textPlaceDist"));
+        }
+        if(intent.getStringExtra("textPlaceEnd") != null) {
+            mapTimeToPlace.put(intent.getStringExtra("textTimeEnd"),intent.getStringExtra("textPlaceEnd"));
+        }
 
-        addPlaceRowByWord(layoutPlan,"12:00",intent.getStringExtra("textPlaceDist"));
+        Iterator<String> it = mapTimeToPlace.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            addPlaceRowByWord(layoutPlan,key,mapTimeToPlace.get(key));
+        }
 
-        //到着地
-        addPlaceRowByIntent(intent,layoutPlan,"textTimeEnd","textPlaceEnd");
+
+        //addPlaceRowByIntent(intent,layoutPlan,"textTimeBegin","textPlaceBegin");
+        //addPlaceRowByWord(layoutPlan,"12:00",intent.getStringExtra("textPlaceDist"));
+        //addPlaceRowByIntent(intent,layoutPlan,"textTimeEnd","textPlaceEnd");
 
     }
 
@@ -329,4 +371,8 @@ public class EditJourneyActivity extends AppCompatActivity {
 
         layout.addView(layoutTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
+
+    final DateFormat dfTime = new SimpleDateFormat("HH:mm");
+
+    private TreeMap<String,String> mapTimeToPlace = new TreeMap<String,String>();
 }
