@@ -92,7 +92,8 @@ public class EditJourneyActivity extends AppCompatActivity {
             mapTimeToPlace.put(intent.getStringExtra("textTimeBegin"),intent.getStringExtra("textPlaceBegin"));
         }
         if(intent.getStringExtra("textPlaceDist") != null) {
-            //intent.getStringExtra("textTimeBegin")からの所要時刻で計算したいな
+            //TODO 開始場所からの所要時刻で計算したい
+            getTimeRequired(this,intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textPlaceDist"),intent.getStringExtra("textTimeBegin"));
             mapTimeToPlace.put("12:00",intent.getStringExtra("textPlaceDist"));
         }
         if(intent.getStringExtra("textPlaceEnd") != null) {
@@ -276,6 +277,90 @@ public class EditJourneyActivity extends AppCompatActivity {
 
             }
         }.execute(word);
+    }
+
+//    private void getTimeRequired(final Context context,final double beginLatitude, final double beginLongitude, final double endLatitude, final double endLongitude) {
+    private String getTimeRequired(final Context context,final String beginPlace, final String endPlace, String beginTime) {
+        ASyncTaskClass atClass = new ASyncTaskClass() {
+            String apiUrl;
+            private CallBackTask callbacktask;
+
+            @Override
+            protected void onPreExecute() {
+                String encodedBeginPlace;
+                String encodedEndPlace;
+                try {
+                    encodedBeginPlace = URLEncoder.encode(beginPlace, "UTF-8");
+                    encodedEndPlace = URLEncoder.encode(endPlace, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    encodedBeginPlace = " ";
+                    encodedEndPlace = " ";
+                    e.printStackTrace();
+                }
+
+                String googleApikey = "AIzaSyDIoGExI7NPDFq6IJwVTDfyeDgca9q2OQQ";
+                apiUrl = "https://maps.googleapis.com/maps/api/directions/json?origin="
+                        + encodedBeginPlace + "&destination="
+                        + encodedEndPlace + "&key="
+                        + googleApikey + "&mode=driving";
+            }
+
+            @Override
+            protected Integer doInBackground(String... params) {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(apiUrl).get().build();
+                Response response = null;
+
+                try {
+                    Call c = client.newCall(request);
+                    response = c.execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (response == null) {
+                    return null;
+                }
+
+                int timeSec;
+
+                try {
+                    JSONObject jo = new JSONObject(response.body().string());
+                    if (!jo.getString("status").equals("OK")) {
+                        return null;
+                    }
+                    //総移動時間を取得
+                    timeSec = jo.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getInt("value");//.getJSONObject();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                return timeSec;
+            }
+
+            @Override
+            protected void onProgressUpdate(Void... params) {
+            }
+
+            @Override
+            protected void onPostExecute(Integer timeSec) {
+                return;
+            }
+
+
+        };
+        //}.execute();
+
+        atClass.setOnCallBack(new ASyncTaskClass.CallBackTask() {
+            @Override
+            public void CallBack(Integer result) {
+                //TODO ここにコールバック処理を書く
+                //resultにはdoinbackgroudの戻り地が入る
+            }
+        });
+
+        atClass.execute();
+        return "";
     }
 
     @Nullable

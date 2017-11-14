@@ -9,7 +9,7 @@
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyC1soeCd_1xyFrW-aSX-6HN77tdtBXgu4w"/>
+        android:value="AIzaSyDIoGExI7NPDFq6IJwVTDfyeDgca9q2OQQ"/>
 
     <application
         android:allowBackup="true"
