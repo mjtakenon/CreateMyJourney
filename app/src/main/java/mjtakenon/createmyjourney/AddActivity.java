@@ -107,6 +107,7 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra("textPlaceBegin",textPlaceBegin.getText().toString());
                 intent.putExtra("textPlaceEnd",textPlaceEnd.getText().toString());
                 intent.putExtra("textPlaceDist",textPlaceDist.getText().toString());
+
                 startActivity(intent);
             }
         });

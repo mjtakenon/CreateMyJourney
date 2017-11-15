@@ -1,5 +1,6 @@
 package mjtakenon.createmyjourney;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,9 +42,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +59,6 @@ public class EditJourneyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journey);
-
 
         //レイアウト作成ボタン
         Button buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
@@ -74,11 +78,13 @@ public class EditJourneyActivity extends AppCompatActivity {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
 
-                Iterator<String> it = mapTimeToPlace.keySet().iterator();
+                Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
                 while (it.hasNext()) {
-                    String key = it.next();
-                    addPlaceRowByWord(layoutPlan,key,mapTimeToPlace.get(key));
+                    Integer key = it.next();
+                    addPlaceRow(layoutPlan, mapTimeToPlace.get(key));
                 }
+
+                setTimeRequired(getApplicationContext(), mapTimeToPlace);
             }
         });
 
@@ -89,29 +95,28 @@ public class EditJourneyActivity extends AppCompatActivity {
 
         //出発地、目的地、到着地を追加
         if(intent.getStringExtra("textPlaceBegin") != null){
-            mapTimeToPlace.put(intent.getStringExtra("textTimeBegin"),intent.getStringExtra("textPlaceBegin"));
+            Place placeBegin = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textTimeBegin"),0);
+            mapTimeToPlace.put(placeBegin.getId(),placeBegin);
         }
         if(intent.getStringExtra("textPlaceDist") != null) {
             //TODO 開始場所からの所要時刻で計算したい
-            getTimeRequired(this,intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textPlaceDist"),intent.getStringExtra("textTimeBegin"));
-            mapTimeToPlace.put("12:00",intent.getStringExtra("textPlaceDist"));
+            Place placeDist = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceDist"),"null",0);
+            //getTimeRequired(this,intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textPlaceDist"),intent.getStringExtra("textTimeBegin"));
+            mapTimeToPlace.put(placeDist.getId(),placeDist);
         }
         if(intent.getStringExtra("textPlaceEnd") != null) {
-            mapTimeToPlace.put(intent.getStringExtra("textTimeEnd"),intent.getStringExtra("textPlaceEnd"));
+            Place placeEnd = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceEnd"),intent.getStringExtra("textTimeEnd"),0);
+            mapTimeToPlace.put(placeEnd.getId(),placeEnd);
         }
 
-        Iterator<String> it = mapTimeToPlace.keySet().iterator();
+        Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
         while (it.hasNext()) {
-            String key = it.next();
-            addPlaceRowByWord(layoutPlan,key,mapTimeToPlace.get(key));
+            Integer key = it.next();
+            addPlaceRow(layoutPlan, mapTimeToPlace.get(key));
         }
-
-
-        //addPlaceRowByIntent(intent,layoutPlan,"textTimeBegin","textPlaceBegin");
-        //addPlaceRowByWord(layoutPlan,"12:00",intent.getStringExtra("textPlaceDist"));
-        //addPlaceRowByIntent(intent,layoutPlan,"textTimeEnd","textPlaceEnd");
-
+        setTimeRequired(getApplicationContext(), mapTimeToPlace);
     }
+
 
     private void setPhotozouImageByWord(final Context context, final ImageView imageview, final String word) {
         new AsyncTask<String, Void, String>() {
@@ -279,34 +284,60 @@ public class EditJourneyActivity extends AppCompatActivity {
         }.execute(word);
     }
 
-//    private void getTimeRequired(final Context context,final double beginLatitude, final double beginLongitude, final double endLatitude, final double endLongitude) {
-    private String getTimeRequired(final Context context,final String beginPlace, final String endPlace, String beginTime) {
-        ASyncTaskClass atClass = new ASyncTaskClass() {
+    //所要時間を取得、placesのtextにセット
+    private void setTimeRequired(final Context context, final TreeMap<Integer,Place> places) {
+        new AsyncTask<Void, Void, ArrayList<Integer>>() {
             String apiUrl;
-            private CallBackTask callbacktask;
+            ProgressDialog progressDialog;
 
             @Override
             protected void onPreExecute() {
-                String encodedBeginPlace;
-                String encodedEndPlace;
+                ArrayList<Place> placesList = new ArrayList<Place>();
+
+                Iterator<Integer> it = places.keySet().iterator();
+                while (it.hasNext()) {
+                    Integer key = it.next();
+                    placesList.add(places.get(key));
+                }
+
+                String encodedBeginPlace;       //最初の場所名
+                String encodedEndPlace;         //最後の場所名
+                ArrayList<String> encodedDistPlaces = new ArrayList<String>();
+
+                //placesが2以上じゃないとどうなるかわからん
                 try {
-                    encodedBeginPlace = URLEncoder.encode(beginPlace, "UTF-8");
-                    encodedEndPlace = URLEncoder.encode(endPlace, "UTF-8");
+                    encodedBeginPlace = URLEncoder.encode(placesList.get(0).getName(), "UTF-8");
+                    encodedEndPlace = URLEncoder.encode(placesList.get(placesList.size()-1).getName(), "UTF-8");
+                    for(int n = 1; n < placesList.size()-1; n++) {
+                        encodedDistPlaces.add(URLEncoder.encode(placesList.get(n).getName(), "UTF-8"));
+                    }
                 } catch (UnsupportedEncodingException e) {
                     encodedBeginPlace = " ";
                     encodedEndPlace = " ";
                     e.printStackTrace();
                 }
 
+                //apiUrl作成
                 String googleApikey = "AIzaSyDIoGExI7NPDFq6IJwVTDfyeDgca9q2OQQ";
                 apiUrl = "https://maps.googleapis.com/maps/api/directions/json?origin="
                         + encodedBeginPlace + "&destination="
                         + encodedEndPlace + "&key="
                         + googleApikey + "&mode=driving";
+
+                //立ち寄りポイントの追加
+                if(encodedDistPlaces.size() >= 1) {
+                    apiUrl += "&waypoints=";
+                }
+                for(int n = 0; n < encodedDistPlaces.size(); n++) {
+                    apiUrl += encodedDistPlaces.get(n);
+                    if(n + 1 < encodedDistPlaces.size()) {
+                        apiUrl += "|";
+                    }
+                }
             }
 
             @Override
-            protected Integer doInBackground(String... params) {
+            protected ArrayList<Integer> doInBackground(Void... params) {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(apiUrl).get().build();
                 Response response = null;
@@ -322,7 +353,7 @@ public class EditJourneyActivity extends AppCompatActivity {
                     return null;
                 }
 
-                int timeSec;
+                ArrayList<Integer> timeSecs = new ArrayList<Integer>();
 
                 try {
                     JSONObject jo = new JSONObject(response.body().string());
@@ -330,12 +361,15 @@ public class EditJourneyActivity extends AppCompatActivity {
                         return null;
                     }
                     //総移動時間を取得
-                    timeSec = jo.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getInt("value");//.getJSONObject();
+                    for(int n = 0; n < places.size() -1; n++) {
+                        Integer timeSec = jo.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
+                        timeSecs.add(timeSec);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
                 }
-                return timeSec;
+                return timeSecs;
             }
 
             @Override
@@ -343,28 +377,58 @@ public class EditJourneyActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onPostExecute(Integer timeSec) {
+            protected void onPostExecute(ArrayList<Integer> timeSecs) {
+
+                Iterator<Integer> it = places.keySet().iterator();
+                Integer prevKey = null;
+
+                for(int n = 0; n < places.size(); n++) {
+                    Integer key = it.next();
+
+                    //出発地の時刻の設定はない
+                    if(prevKey == null) {
+                        prevKey = key;
+                        continue;
+                    }
+
+                    Date dateBegin = null;
+                    TextView textView = (TextView)findViewById(places.get(key).getId());
+
+                    try {
+                        //出発時刻
+                        dateBegin = dfTime.parse(places.get(prevKey).getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(dateBegin == null) {
+                        textView.setText("failed");
+                    }
+
+                    // Date型の日時をCalendar型に変換
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(dateBegin);
+
+                    // 日時を加算する
+                    calendar.add(Calendar.SECOND, timeSecs.get(n-1));
+
+                    // Calendar型の日時をDate型に戻す
+                    Date newDate = calendar.getTime();
+
+                    String newTime = dfTime.format(newDate);
+                    textView.setText(newTime);
+                    places.get(key).setTime(newTime);
+
+                    prevKey = key;
+                }
                 return;
             }
-
-
-        };
-        //}.execute();
-
-        atClass.setOnCallBack(new ASyncTaskClass.CallBackTask() {
-            @Override
-            public void CallBack(Integer result) {
-                //TODO ここにコールバック処理を書く
-                //resultにはdoinbackgroudの戻り地が入る
-            }
-        });
-
-        atClass.execute();
-        return "";
+        }.execute();
+        return;
     }
 
     @Nullable
-    private String getAddressByPlace(String place) {
+    private String getAddressByPlace(Place place) {
 
         if(!Geocoder.isPresent()) {
             Toast.makeText(getApplication(), "位置情報サービスが無効", Toast.LENGTH_SHORT).show();
@@ -377,7 +441,7 @@ public class EditJourneyActivity extends AppCompatActivity {
         String address;
 
         try {
-            addresses = coder.getFromLocationName(place,1);
+            addresses = coder.getFromLocationName(place.getName(),1);
             Toast.makeText(getApplication(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
             address = addresses.get(0).getAddressLine(0);
         } catch (IOException e) {
@@ -388,12 +452,13 @@ public class EditJourneyActivity extends AppCompatActivity {
         return address;
     }
 
-    private void addPlaceRowByIntent(Intent intent,LinearLayout layout,String time,String place)
+    private void addPlaceRow(LinearLayout layout,Place place)
     {
         //時間表示
         TextView textTime = new TextView(this);
-        //intentから時間を取得
-        textTime.setText(intent.getStringExtra(time));
+        //intentから時間を取得(最初以外はnull)
+        textTime.setText(place.getTime());
+        textTime.setId(place.getId());
         textTime.setPadding(0,0,20,0);
 
         //レイアウトを取得
@@ -409,45 +474,10 @@ public class EditJourneyActivity extends AppCompatActivity {
         layoutPlace.setOrientation(LinearLayout.VERTICAL);
 
         TextView textPlace = new TextView(this);
-        textPlace.setText(intent.getStringExtra(place));
+        textPlace.setText(place.getName());
 
         ImageView imagePlace = new ImageView(this);
-        //setPhotozouImageByWord(this, imagePlace, intent.getStringExtra(place));
-        setFlickrImageByWord(this, imagePlace, intent.getStringExtra(place));
-
-        layoutPlace.addView(imagePlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        layoutPlace.addView(textPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        layoutTime.addView(layoutPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        layout.addView(layoutTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-    }
-
-    private void addPlaceRowByWord(LinearLayout layout,String time,String place)
-    {
-        //時間表示
-        TextView textTime = new TextView(this);
-        //intentから時間を取得
-        textTime.setText(time);
-        textTime.setPadding(0,0,20,0);
-
-        //レイアウトを取得
-        LinearLayout layoutTime = new LinearLayout(this);
-        layoutTime.setOrientation(LinearLayout.HORIZONTAL);
-
-        layoutTime.addView(textTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        layoutTime.setPadding(20,20,50,20);
-
-        //建物写真と建物名称を右に
-        LinearLayout layoutPlace = new LinearLayout(this);
-        layoutPlace.setOrientation(LinearLayout.VERTICAL);
-
-        TextView textPlace = new TextView(this);
-        textPlace.setText(place);
-
-        ImageView imagePlace = new ImageView(this);
-        setFlickrImageByWord(this, imagePlace, place);
+        setFlickrImageByWord(this, imagePlace, place.getName());
 
         layoutPlace.addView(imagePlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         layoutPlace.addView(textPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -459,5 +489,5 @@ public class EditJourneyActivity extends AppCompatActivity {
 
     final DateFormat dfTime = new SimpleDateFormat("HH:mm");
 
-    private TreeMap<String,String> mapTimeToPlace = new TreeMap<String,String>();
+    private TreeMap<Integer,Place> mapTimeToPlace = new TreeMap<Integer,Place>();
 }
