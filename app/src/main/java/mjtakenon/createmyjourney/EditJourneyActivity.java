@@ -502,7 +502,7 @@ public class EditJourneyActivity extends AppCompatActivity {
         TextView textPlace = new TextView(this);
         textPlace.setText(place.getName());
 
-        ImageButton imagePlace = new ImageButton(this);
+        ImageView imagePlace = new ImageView(this);
         setFlickrImageByWord(this, imagePlace, place.getName());
 
         layoutPlace.addView(imagePlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
