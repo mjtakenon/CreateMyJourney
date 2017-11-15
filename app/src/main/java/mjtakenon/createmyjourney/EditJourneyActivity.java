@@ -95,17 +95,16 @@ public class EditJourneyActivity extends AppCompatActivity {
 
         //出発地、目的地、到着地を追加
         if(intent.getStringExtra("textPlaceBegin") != null){
-            Place placeBegin = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textTimeBegin"),0);
+            Place placeBegin = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceBegin"),null,null,intent.getStringExtra("textTimeBegin"));
             mapTimeToPlace.put(placeBegin.getId(),placeBegin);
         }
         if(intent.getStringExtra("textPlaceDist") != null) {
-            //TODO 開始場所からの所要時刻で計算したい
-            Place placeDist = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceDist"),"null",0);
+            Place placeDist = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceDist"),null,intent.getIntExtra("intDurationDist",0),null);
             //getTimeRequired(this,intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textPlaceDist"),intent.getStringExtra("textTimeBegin"));
             mapTimeToPlace.put(placeDist.getId(),placeDist);
         }
         if(intent.getStringExtra("textPlaceEnd") != null) {
-            Place placeEnd = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceEnd"),intent.getStringExtra("textTimeEnd"),0);
+            Place placeEnd = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceEnd"),intent.getStringExtra("textTimeEnd"),null,null);
             mapTimeToPlace.put(placeEnd.getId(),placeEnd);
         }
 
@@ -304,7 +303,7 @@ public class EditJourneyActivity extends AppCompatActivity {
                 String encodedEndPlace;         //最後の場所名
                 ArrayList<String> encodedDistPlaces = new ArrayList<String>();
 
-                //placesが2以上じゃないとどうなるかわからん
+                //placesが2以上じゃないと死ぬ
                 try {
                     encodedBeginPlace = URLEncoder.encode(placesList.get(0).getName(), "UTF-8");
                     encodedEndPlace = URLEncoder.encode(placesList.get(placesList.size()-1).getName(), "UTF-8");
@@ -360,7 +359,7 @@ public class EditJourneyActivity extends AppCompatActivity {
                     if (!jo.getString("status").equals("OK")) {
                         return null;
                     }
-                    //総移動時間を取得
+                    //JSONから各移動時間を取得
                     for(int n = 0; n < places.size() -1; n++) {
                         Integer timeSec = jo.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
                         timeSecs.add(timeSec);
@@ -385,39 +384,65 @@ public class EditJourneyActivity extends AppCompatActivity {
                 for(int n = 0; n < places.size(); n++) {
                     Integer key = it.next();
 
-                    //出発地の時刻の設定はない
-                    if(prevKey == null) {
-                        prevKey = key;
-                        continue;
-                    }
-
                     Date dateBegin = null;
                     TextView textView = (TextView)findViewById(places.get(key).getId());
 
+                    //移動時間を計算
                     try {
-                        //出発時刻
-                        dateBegin = dfTime.parse(places.get(prevKey).getTime());
+                        if(prevKey != null) { //前の場所の出発時刻
+                            dateBegin = dfTime.parse(places.get(prevKey).getDepartureTime());
+                        } else {               //出発地だった場合
+                            dateBegin = dfTime.parse(places.get(key).getDepartureTime());
+                        }
                     } catch (ParseException e) {
+                        textView.setText("取得失敗");
                         e.printStackTrace();
+                        continue;
                     }
 
-                    if(dateBegin == null) {
-                        textView.setText("failed");
-                    }
-
-                    // Date型の日時をCalendar型に変換
+                    // 日付計算のためCalendarに変換
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(dateBegin);
 
-                    // 日時を加算する
-                    calendar.add(Calendar.SECOND, timeSecs.get(n-1));
+                    // 出発地以外移動時間を加算し到着時刻を計算
+                    if(places.get(key).getDepartureTime() == null) {
+                        calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
+                        //ArrivalTimeを算出
+                        String newArrivalTime = dfTime.format(calendar.getTime());
+                        places.get(key).setArrivalTime(newArrivalTime);
+                    }
 
-                    // Calendar型の日時をDate型に戻す
-                    Date newDate = calendar.getTime();
+                    // 経由地の場合のみ滞在時間を取得
+                    if(places.get(key).getDurationMinute() != null) {
+                        calendar.add(Calendar.MINUTE, places.get(key).getDurationMinute());
+                        String newDepartureTime = dfTime.format(calendar.getTime());
+                        places.get(key).setDepartureTime(newDepartureTime);
+                        //newDurationMinute = places.get(key).getDurationMinute();
+                    }
+                    //places.get(key).setDurationMinute(newDurationMinute);
 
-                    String newTime = dfTime.format(newDate);
-                    textView.setText(newTime);
-                    places.get(key).setTime(newTime);
+                    // 到着地の場合以外出発時刻を計算
+                    if(places.get(key).getArrivalTime() == null) {
+                        String newDepartureTime = dfTime.format(calendar.getTime());
+                        places.get(key).setDepartureTime(newDepartureTime);
+                    }
+
+
+                    //textViewに表示するテキストを作成
+                    String text = "";
+                    // 出発地の場合
+                    if(places.get(key).getDepartureTime() != null && places.get(key).getDurationMinute() == null) {
+                        text = places.get(key).getDepartureTime() + "発";
+                    }
+                    // 経由地の場合
+                    if(places.get(key).getDurationMinute() != null) {
+                        text = places.get(key).getArrivalTime() + "着\n" + places.get(key).getDurationMinute() + "分滞在\n" + places.get(key).getDepartureTime() + "発";
+                    }
+                    // 到着地の場合以外出発時刻を計算
+                    if(places.get(key).getArrivalTime() != null && places.get(key).getDurationMinute() == null) {
+                        text = places.get(key).getArrivalTime() + "着";
+                    }
+                    textView.setText(text);
 
                     prevKey = key;
                 }
@@ -454,10 +479,17 @@ public class EditJourneyActivity extends AppCompatActivity {
 
     private void addPlaceRow(LinearLayout layout,Place place)
     {
-        //時間表示
+        //時間とか表示するビューを作成
         TextView textTime = new TextView(this);
-        //intentから時間を取得(最初以外はnull)
-        textTime.setText(place.getTime());
+
+        /*if (place.getArrivalTime() != null) {   //到着時間のみある場合(到着地)
+            textTime.setText(place.getArrivalTime());
+        } else if (place.getDepartureTime() != null) {  //出発時間のみある場合(出発地)
+            textTime.setText(place.getDepartureTime());
+        } else {    //それ以外は時間を計算(経由地)
+            textTime.setText("検索中...");
+        }*/
+        textTime.setText("検索中...");
         textTime.setId(place.getId());
         textTime.setPadding(0,0,20,0);
 
