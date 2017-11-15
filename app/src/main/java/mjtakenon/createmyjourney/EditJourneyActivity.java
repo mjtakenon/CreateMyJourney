@@ -1,5 +1,6 @@
 package mjtakenon.createmyjourney;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -78,13 +80,7 @@ public class EditJourneyActivity extends AppCompatActivity {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
 
-                Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
-                while (it.hasNext()) {
-                    Integer key = it.next();
-                    addPlaceRow(layoutPlan, mapTimeToPlace.get(key));
-                }
-
-                setTimeRequired(getApplicationContext(), mapTimeToPlace);
+                setPlaces(layoutPlan,mapTimeToPlace);
             }
         });
 
@@ -104,16 +100,11 @@ public class EditJourneyActivity extends AppCompatActivity {
             mapTimeToPlace.put(placeDist.getId(),placeDist);
         }
         if(intent.getStringExtra("textPlaceEnd") != null) {
-            Place placeEnd = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceEnd"),intent.getStringExtra("textTimeEnd"),null,null);
-            mapTimeToPlace.put(placeEnd.getId(),placeEnd);
+            Place placeEnd = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceEnd"), intent.getStringExtra("textTimeEnd"), null, null);
+            mapTimeToPlace.put(placeEnd.getId(), placeEnd);
         }
 
-        Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
-        while (it.hasNext()) {
-            Integer key = it.next();
-            addPlaceRow(layoutPlan, mapTimeToPlace.get(key));
-        }
-        setTimeRequired(getApplicationContext(), mapTimeToPlace);
+        setPlaces(layoutPlan,mapTimeToPlace);
     }
 
 
@@ -284,7 +275,7 @@ public class EditJourneyActivity extends AppCompatActivity {
     }
 
     //所要時間を取得、placesのtextにセット
-    private void setTimeRequired(final Context context, final TreeMap<Integer,Place> places) {
+    private void setTimeRequired(final Activity activity, final TreeMap<Integer,Place> places) {
         new AsyncTask<Void, Void, ArrayList<Integer>>() {
             String apiUrl;
             ProgressDialog progressDialog;
@@ -333,6 +324,11 @@ public class EditJourneyActivity extends AppCompatActivity {
                         apiUrl += "|";
                     }
                 }
+
+                //TODO プログレスダイヤログが生成できず落ちる
+                progressDialog = new ProgressDialog(activity);
+                progressDialog.setMessage("検索中...");
+                progressDialog.show();
             }
 
             @Override
@@ -446,6 +442,11 @@ public class EditJourneyActivity extends AppCompatActivity {
 
                     prevKey = key;
                 }
+
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+
                 return;
             }
         }.execute();
@@ -482,13 +483,6 @@ public class EditJourneyActivity extends AppCompatActivity {
         //時間とか表示するビューを作成
         TextView textTime = new TextView(this);
 
-        /*if (place.getArrivalTime() != null) {   //到着時間のみある場合(到着地)
-            textTime.setText(place.getArrivalTime());
-        } else if (place.getDepartureTime() != null) {  //出発時間のみある場合(出発地)
-            textTime.setText(place.getDepartureTime());
-        } else {    //それ以外は時間を計算(経由地)
-            textTime.setText("検索中...");
-        }*/
         textTime.setText("検索中...");
         textTime.setId(place.getId());
         textTime.setPadding(0,0,20,0);
@@ -499,7 +493,7 @@ public class EditJourneyActivity extends AppCompatActivity {
 
         layoutTime.addView(textTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        layoutTime.setPadding(20,20,50,20);
+        layoutTime.setPadding(20,20,30,20);
 
         //建物写真と建物名称を右に
         LinearLayout layoutPlace = new LinearLayout(this);
@@ -508,7 +502,7 @@ public class EditJourneyActivity extends AppCompatActivity {
         TextView textPlace = new TextView(this);
         textPlace.setText(place.getName());
 
-        ImageView imagePlace = new ImageView(this);
+        ImageButton imagePlace = new ImageButton(this);
         setFlickrImageByWord(this, imagePlace, place.getName());
 
         layoutPlace.addView(imagePlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -516,7 +510,36 @@ public class EditJourneyActivity extends AppCompatActivity {
 
         layoutTime.addView(layoutPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        imagePlace.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                // TODO 滞在時間編集、場所削除のためのDialogを開けるように?
+                // 画像クリックでなく編集(削除)ボタンを別で追加した方がいいかも?
+                // 出発地と到着地は削除不可にするとか?
+            }
+        });
         layout.addView(layoutTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    }
+
+    private void addDetourButton(LinearLayout layout) {
+        ImageButton buttonAddDetour = new ImageButton(this);
+        buttonAddDetour.setImageResource(R.drawable.plus_black_small);
+        layout.addView(buttonAddDetour, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    }
+
+    //場所と追加用ボタンを交互に配置
+    private void setPlaces(LinearLayout layout,TreeMap<Integer,Place> places)
+    {
+        Iterator<Integer> it = places.keySet().iterator();
+        while (it.hasNext()) {
+            Integer key = it.next();
+            addPlaceRow(layout, places.get(key));
+            if(it.hasNext()) {
+                addDetourButton(layout);
+            }
+        }
+        setTimeRequired(EditJourneyActivity.this, places);
     }
 
     final DateFormat dfTime = new SimpleDateFormat("HH:mm");

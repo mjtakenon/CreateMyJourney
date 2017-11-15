@@ -113,7 +113,7 @@ public class AddActivity extends AppCompatActivity {
                 try {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(dfTime.parse(textDurationDist.getText().toString()));
-                    intent.putExtra("intDurationDist",calendar.get(Calendar.MINUTE));
+                    intent.putExtra("intDurationDist",calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
                 } catch (ParseException e) {
                     intent.putExtra("intDurationDist",0);
                     e.printStackTrace();
