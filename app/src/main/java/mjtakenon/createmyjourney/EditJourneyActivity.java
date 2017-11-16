@@ -1,7 +1,7 @@
 package mjtakenon.createmyjourney;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -67,10 +67,11 @@ import java.util.TreeMap;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+
 import android.support.v4.app.FragmentActivity;
 
 // 元はAppCompatActivityだったけどFragmentActivityに変えた
-public class EditJourneyActivity extends FragmentActivity implements OnMapReadyCallback {
+public class EditJourneyActivity extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,27 +121,18 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
         setPlaces(layoutPlan, mapTimeToPlace);
 
-        //TODO Mapが表示されない
-
-        // mapRouteは取得できるけどもgetMapAsyncで表示されない
-        //MapView mapRoute = (MapView) findViewById(R.id.mapRoute);
-        //mapRoute.getMapAsync(this);
-
         // findFragmentByIdでfragmentが取得できない(nullが帰ってくる)くて落ちる
-         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMap);
-         mapFragment.getMapAsync(this);
-
-        /*MapFragment mapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentMap, mapFragment);
-        fragmentTransaction.commit();*/
-
-
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(R.id.fragmentMapRoot, mapFragment, "mapFragment");
+        ft.commit();
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(true);
         googleMap.setIndoorEnabled(true);
         googleMap.setBuildingsEnabled(true);
@@ -166,13 +158,13 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                 imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
                 try {
-                    encodedString = URLEncoder.encode(word,"UTF-8");
+                    encodedString = URLEncoder.encode(word, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     encodedString = " ";
                     e.printStackTrace();
                     return;
                 }
-                apiUrl = "https://api.photozou.jp/rest/search_public.json?type=photo&keyword="+encodedString+"&limit=1";
+                apiUrl = "https://api.photozou.jp/rest/search_public.json?type=photo&keyword=" + encodedString + "&limit=1";
             }
 
             @Override
@@ -182,20 +174,20 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                 Request request = new Request.Builder().url(apiUrl).get().build();
                 Response response = null;
                 try {
-                    Call c= client.newCall(request);
+                    Call c = client.newCall(request);
                     response = c.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                if(response == null) {
+                if (response == null) {
                     return null;
                 }
 
                 String imageUrl;
                 try {
                     JSONObject jo = new JSONObject(response.body().string());
-                    if(!jo.getString("stat").equals("ok")) {
+                    if (!jo.getString("stat").equals("ok")) {
                         return null;
                     }
                     imageUrl = jo.getJSONObject("info").getJSONArray("photo").getJSONObject(0).getString("image_url");
@@ -213,7 +205,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
             @Override
             protected void onPostExecute(String imageUrl) {
-                if(imageUrl != null) {
+                if (imageUrl != null) {
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.displayImage(imageUrl, imageview);
                     imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -241,7 +233,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                 imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
                 try {
-                    encodedString = URLEncoder.encode(word,"UTF-8");
+                    encodedString = URLEncoder.encode(word, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     encodedString = " ";
                     e.printStackTrace();
@@ -267,13 +259,13 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                 Response response = null;
 
                 try {
-                    Call c= client.newCall(request);
+                    Call c = client.newCall(request);
                     response = c.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                if(response == null) {
+                if (response == null) {
                     return null;
                 }
 
@@ -281,7 +273,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
                 try {
                     JSONObject jo = new JSONObject(response.body().string());
-                    if(!jo.getString("stat").equals("ok")) {
+                    if (!jo.getString("stat").equals("ok")) {
                         return null;
                     }
                     JSONObject obj = jo.getJSONObject("photos").getJSONArray("photo").getJSONObject(0);
@@ -304,7 +296,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
             @Override
             protected void onPostExecute(String imageUrl) {
-                if(imageUrl != null) {
+                if (imageUrl != null) {
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.displayImage(imageUrl, imageview);
                     imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -320,7 +312,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
     }
 
     //Google Directionsを使って所要時間を取得、placesのtextにセット
-    private void setTimeRequired(final Activity activity, final TreeMap<Integer,Place> places) {
+    private void setTimeRequired(final Activity activity, final TreeMap<Integer, Place> places) {
         new AsyncTask<Void, Void, ArrayList<Integer>>() {
             String apiUrl;
             ProgressDialog progressDialog;
@@ -343,8 +335,8 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                 //placesが2以上じゃないと死ぬ
                 try {
                     encodedBeginPlace = URLEncoder.encode(placesList.get(0).getName(), "UTF-8");
-                    encodedEndPlace = URLEncoder.encode(placesList.get(placesList.size()-1).getName(), "UTF-8");
-                    for(int n = 1; n < placesList.size()-1; n++) {
+                    encodedEndPlace = URLEncoder.encode(placesList.get(placesList.size() - 1).getName(), "UTF-8");
+                    for (int n = 1; n < placesList.size() - 1; n++) {
                         encodedDistPlaces.add(URLEncoder.encode(placesList.get(n).getName(), "UTF-8"));
                     }
                 } catch (UnsupportedEncodingException e) {
@@ -361,12 +353,12 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                         + googleApikey + "&mode=driving";
 
                 //立ち寄りポイントの追加
-                if(encodedDistPlaces.size() >= 1) {
+                if (encodedDistPlaces.size() >= 1) {
                     apiUrl += "&waypoints=";
                 }
-                for(int n = 0; n < encodedDistPlaces.size(); n++) {
+                for (int n = 0; n < encodedDistPlaces.size(); n++) {
                     apiUrl += encodedDistPlaces.get(n);
-                    if(n + 1 < encodedDistPlaces.size()) {
+                    if (n + 1 < encodedDistPlaces.size()) {
                         apiUrl += "|";
                     }
                 }
@@ -403,7 +395,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                         return null;
                     }
                     //JSONから各移動時間を取得
-                    for(int n = 0; n < places.size() -1; n++) {
+                    for (int n = 0; n < places.size() - 1; n++) {
                         Integer timeSec = jo.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
                         timeSecs.add(timeSec);
                     }
@@ -420,15 +412,15 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                 Iterator<Integer> it = places.keySet().iterator();
                 Integer prevKey = null;
 
-                for(int n = 0; n < places.size(); n++) {
+                for (int n = 0; n < places.size(); n++) {
                     Integer key = it.next();
 
                     Date dateBegin = null;
-                    TextView textView = (TextView)findViewById(places.get(key).getId());
+                    TextView textView = (TextView) findViewById(places.get(key).getId());
 
                     //移動時間を計算
                     try {
-                        if(prevKey != null) { //前の場所の出発時刻
+                        if (prevKey != null) { //前の場所の出発時刻
                             dateBegin = dfTime.parse(places.get(prevKey).getDepartureTime());
                         } else {               //出発地だった場合
                             dateBegin = dfTime.parse(places.get(key).getDepartureTime());
@@ -444,7 +436,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                     calendar.setTime(dateBegin);
 
                     // 出発地以外移動時間を加算し到着時刻を計算
-                    if(places.get(key).getDepartureTime() == null) {
+                    if (places.get(key).getDepartureTime() == null) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
                         //ArrivalTimeを算出
                         String newArrivalTime = dfTime.format(calendar.getTime());
@@ -452,7 +444,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                     }
 
                     // 経由地の場合のみ滞在時間を取得
-                    if(places.get(key).getDurationMinute() != null) {
+                    if (places.get(key).getDurationMinute() != null) {
                         calendar.add(Calendar.MINUTE, places.get(key).getDurationMinute());
                         String newDepartureTime = dfTime.format(calendar.getTime());
                         places.get(key).setDepartureTime(newDepartureTime);
@@ -461,7 +453,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                     //places.get(key).setDurationMinute(newDurationMinute);
 
                     // 到着地の場合以外出発時刻を計算
-                    if(places.get(key).getArrivalTime() == null) {
+                    if (places.get(key).getArrivalTime() == null) {
                         String newDepartureTime = dfTime.format(calendar.getTime());
                         places.get(key).setDepartureTime(newDepartureTime);
                     }
@@ -470,15 +462,15 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
                     //textViewに表示するテキストを作成
                     String text = "";
                     // 出発地の場合
-                    if(places.get(key).getDepartureTime() != null && places.get(key).getDurationMinute() == null) {
+                    if (places.get(key).getDepartureTime() != null && places.get(key).getDurationMinute() == null) {
                         text = places.get(key).getDepartureTime() + "発";
                     }
                     // 経由地の場合
-                    if(places.get(key).getDurationMinute() != null) {
+                    if (places.get(key).getDurationMinute() != null) {
                         text = places.get(key).getArrivalTime() + "着\n" + places.get(key).getDurationMinute() + "分滞在\n" + places.get(key).getDepartureTime() + "発";
                     }
                     // 到着地の場合以外出発時刻を計算
-                    if(places.get(key).getArrivalTime() != null && places.get(key).getDurationMinute() == null) {
+                    if (places.get(key).getArrivalTime() != null && places.get(key).getDurationMinute() == null) {
                         text = places.get(key).getArrivalTime() + "着";
                     }
                     textView.setText(text);
@@ -499,7 +491,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
     @Nullable
     private String getAddressByPlace(Place place) {
 
-        if(!Geocoder.isPresent()) {
+        if (!Geocoder.isPresent()) {
             Toast.makeText(getApplication(), "位置情報サービスが無効", Toast.LENGTH_SHORT).show();
             return null;
         }
@@ -510,24 +502,24 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
         String address;
 
         try {
-            addresses = coder.getFromLocationName(place.getName(),1);
+            addresses = coder.getFromLocationName(place.getName(), 1);
             Toast.makeText(getApplication(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
             address = addresses.get(0).getAddressLine(0);
         } catch (IOException e) {
-            Toast.makeText(getApplication(), "目的地の検索に失敗",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), "目的地の検索に失敗", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             return null;
         }
         return address;
     }
 
-    private void addPlaceRow(LinearLayout layout,Place place) {
+    private void addPlaceRow(LinearLayout layout, Place place) {
         //時間とか表示するビューを作成
         TextView textTime = new TextView(this);
 
         textTime.setText("検索中...");
         textTime.setId(place.getId());
-        textTime.setPadding(0,0,20,0);
+        textTime.setPadding(0, 0, 20, 0);
 
         //レイアウトを取得
         LinearLayout layoutTime = new LinearLayout(this);
@@ -535,7 +527,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
         layoutTime.addView(textTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        layoutTime.setPadding(20,20,30,20);
+        layoutTime.setPadding(20, 20, 30, 20);
 
         //建物写真と建物名称を右に
         LinearLayout layoutPlace = new LinearLayout(this);
@@ -552,7 +544,7 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
         layoutTime.addView(layoutPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        imagePlace.setOnClickListener(new View.OnClickListener(){
+        imagePlace.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -571,13 +563,13 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
     }
 
     //場所と追加用ボタンを交互に配置
-    private void setPlaces(LinearLayout layout,TreeMap<Integer,Place> places) {
+    private void setPlaces(LinearLayout layout, TreeMap<Integer, Place> places) {
 
         Iterator<Integer> it = places.keySet().iterator();
         while (it.hasNext()) {
             Integer key = it.next();
             addPlaceRow(layout, places.get(key));
-            if(it.hasNext()) {
+            if (it.hasNext()) {
                 addDetourButton(layout);
             }
         }
@@ -586,6 +578,6 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
     final DateFormat dfTime = new SimpleDateFormat("HH:mm");
 
-    private TreeMap<Integer,Place> mapTimeToPlace = new TreeMap<Integer,Place>();
+    private TreeMap<Integer, Place> mapTimeToPlace = new TreeMap<Integer, Place>();
 
 }
