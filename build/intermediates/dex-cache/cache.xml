@@ -2,31 +2,22 @@
 <items version="2" >
 
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\3715ed76b87633a1294f87caaa1675eceff6b1f7\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\576b4dbd6c2477f0e374e93a6871705da46a7064\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="dd282bdeaa904c59d77e57dedd7e0a241c9b679d">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_35939d93ac5d9b596266dd207c36530eff46f53f.jar" />
+        sha1="c6aa915c08cfd82780c10d4b957018bf819a48e2">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_005c34a0204262e1344ad8f7a362c41faaefb64b\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\129045dfeb695961bd6397a0a5e6a5c09b59060b\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\3eeaf0181e241cc1e6ed336f0f60b6db9e029a03\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="2b12b18c5518021cc71577c83d1290f8ddaa3c98">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_2b755acaec1b5f528fa87506a96074fc9c47f7fd.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\9abc421f9840d3bd1e0c8badd74d7a8fd2817522\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="ffd0ddf5e57b4d60c4a3fbcd38fa20349a0cebd1">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_f1c36b665b9a08ac0ea4e92499bb8514931acb43.jar" />
+        sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a39e90c245db8c0efc2e1b50d2384430d2bd7d82\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -38,67 +29,112 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_8eb53583653c9067a691c085320a027d84399a3b.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\bca9db2b84bd3b349c3cbaac9f6c3410bf8677ed\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\1cf997668902a76290b21b5e0394eccc5e3d0ac5\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="fcae52a60bc07924d370b4d376116cd8f8581f54">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_45cd5767039843f950abcb6e9982d5a209866df6.jar" />
+        sha1="914f5d3e3ace66080e59613708f06d129a222e25">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_b3a856149525fe9b2af29c75e852a8b7d80f1755\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.0.0\2534c458682c73f5b9871131ab3098d3f987ca3\okio-1.0.0.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\6f1c5627da599a4864ef700ead8439937868bd73\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="02534c458682c73f5b9871131ab3098d3f987ca3">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\okio-1.0.0_ea395d309023bfcac07e0a32d1a2ce051f3b81c7.jar" />
+        sha1="7c24e2e9773fb498e390ce973db382c3ddcf748e">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_b1368ee7d405faf3fde5fe81b283d453dfeec22d\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\cab258f65ce7884e68e52a717bd761fbe7c909ec\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\283cb991b3c43adfb0e88e2a7b40fd1b44349413\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="f47f4d5bdfd7d7bf330945b8a7ccce4ab437a710">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_868a629bb8696031d9b1ea03c51f813a9e85e107.jar" />
+        sha1="d8942ee348aaa9341f08f7e2437063893fe27542">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_22c16ae84c28a1446e7764acf0fa461c8c18327b\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\882e9e1d9b7bbd66f1996359876415f1f8f4f419\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\2cd8eaa0bed23432caa89c9295013295c71737d9\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="70ffe00aaf049893f59d1dad57bd82992faa38ef">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_7bc66be085f5bacb58d6ba042d073afb61e4e8a6.jar" />
+        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_00bbab6491978d3a924a14e31b877287e21f10ca\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\80dee67425d409f1f37abe179a8567e43a69e88d\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\29ee759e0d86979195821cb5c283f89dc1da3fbb\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="576570f46ff6ccc69a984af9e55ddd58d9549270">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_c188609dd4d2ab22d1cb28aaaeec2d683d91aeba.jar" />
+        sha1="364364bf77b4a71afc5930fc3ae57b3f0eea637c">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_dceb3cccb7812256af63a03e351432c4808c2031\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\8b544ffbe6d4ea9149353db080d204f840b7a0de\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\37e5e6038a22852e6584e62646f68510249ce880\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="a5d52089bf4d31537232bb6bcb70cee817d8a374">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_2494b5e3c9d249f05681c93c05acdcdab49ff8c0.jar" />
+        sha1="f2cb88e7e28736d44e7e643deb80c9af1c3662c8">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_34b0d0badb6f262a91e059dd6f7db13984c3f727\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\742a5804cc68a0676c3beea49a29c4e4d576156f\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\c115f7dd9582bbd7fccb7ed7e65908cafbf2737e\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="41f47bbcd281fdb1e42e220220ab3bfa1da591e0">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_363b365609f1d2850b43c125b8765a37c4fb1b6c.jar" />
+        sha1="c72b1515efbd8ad652e2d63582c8234a979b1e53">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_db35825db7df3c2ef4f915aba0f2d5bd751095e0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\f77c4af64e005d5272f9928914c54d389ec0812f\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c175c3009577fad8b433703f5d7ac2dc21d3871f">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_280581dc49623ef89a4d3c9556fa62d584738d22\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\03544a00e4ca5b7306064f1c3c86fdc59f344f2a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_99a1e6673a0df0ad031b9c383f440d84717d0b0e\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\2925821be00af1c2f727a3df4af6818e4f8d1bfb\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="02b91f8efa91dcdf5c555ee24b7f006f02cd0f8b">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4bbc734a5dcc822fb90e95426855a7a035395ddf\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\08d62ae7fed95b82e39ea3cd1458580090fdf92a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c8bf878c09bf0df6ae76eb6c2df38c6a186b38b7">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4b83f989a6c0fc97dd1cff6d1ecf092dc724bcbe\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\20f93a73ba3b1a97c78daa3d0f317f931f124c53\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3ac08c35419ab7cf9146969de471768dbe502f0f">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_97fb8e5da77fb4e3db87b8bc3f1bb946339cbbb9\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -106,62 +142,44 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="ced606bd8bd75a676f127315e748a65a4de2c203">
+        sha1="0b4dd3dfec878fd1d56590e0d62c4f3ef7efe662">
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_9017b7a7cf082713285539982c82315113bcafc7\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\04c87aad7418651fcdc339e9217efb2eda4e52e9\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\e5d859ec41de452cc2ac84bfdc98f6d951724a7f\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="6b3430725095bd46b785e97bd34240826c27b4db">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_c8558e6bfddff294e91e1db0c8b04fc6d1027de0.jar" />
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_851238525dad29fa9e176ebd9ccec9beb7ce3f97\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\7d49c8fed47443aa238807372fb35c5a56a08bae\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\d01abb4f759d66e354e75584a59ad9fd2a602c12\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="ed87ccdcb70c17d71ba4e6e4ac16afa62d3c49fb">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_678efaeca350317970531fcdb6b15e72e6808e90.jar" />
+        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8a600d05906bfaa64a2682bc1954216f307ba49a\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\a6986aa2e2a3643bf1e94ea9e41decc3e3c839e3\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\44ed2e13309b15bd05b565c6527feee96dfc0e41\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="f5ff5e3811e8c9485fd27f9052ae4d4d23a22d9d">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_736fa9d4994476237edb584c08286523b249c207.jar" />
+        sha1="56d68d1174b9c1e368017a850b62b12429f39757">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_308fac2f48993ed149ecb464d8682275d39b1e95\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\libs\universal-image-loader-1.9.5.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\2317f7756ce379c4292187608a541296e195bb30\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.5_3c598eafa8b785ad1cefd9b6b46e1dbf7a56b489.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\c2a4361cf3f401c936770f3767c010a79f7431bf\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="43e9789bd3240271265ab30ce1be9f224843f5a8">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_2b24bddd18e6550276e29f3dd7e0892137261196.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\91477e1e52a3597cebf0e3cc27d8ec2e8ee636a5\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="bfba7cf662f7e3e2cfeb92226c6b84c08e590225">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_9a9f1e90b3d5014fdda57db6ef077b339403c647.jar" />
+        sha1="4b685077cdb08cf7ae8b61afd1fe910e47d91b9a">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_83bfa2d8b02899e9ce6414388609f9c561e8a62f\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -174,6 +192,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\25731a653c4b0fe2ef2d4de178335fde8a63e1d9\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="76ea35b41786082af23db898ca9e0fc07cc71fb9">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_387ed53f5880680b7ff71d314081d25ee52b18ad\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
@@ -182,58 +209,31 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_7e2b12118a74ad8377e638fb948b958f36661cd1\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\3392f947187474f94985b9f8717e70304a1f9303\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\41d1dad127fe45bac609e246a647ef5e01e9cb0e\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="2c379c235d7983201bb83edfc3c60bb0dafb5805">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_115cea63ed7095f0e9ca3c9fc3898183543ce6a3.jar" />
+        sha1="34c23b5894b4f24d566bfc33e0e25462c6436b78">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ed397fe127a8690f6ac26828de19521bf3c5026d\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\334107b1d656628b7a0cdd4941e478d09bc8b43f\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\8f43afb437ba4ae6b00e11f508d53c0faf7a5534\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="e5b429c146094a612134910688d169ec08deeefb">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_9b73843ebf65a0effddc8db9a5f788a73bde63ec.jar" />
+        sha1="38789e20ace9ab7dbd00554bd2673ab424478d3b">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5b32c9c7eaa9d49b71cadee149863a87d82d62ce\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\dedc94ea272abec860dc1a377462acfa2d2ac9b3\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\eab9196bd7ddbd86c84a8484ae2008a2bba28212\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="e7f890dd2539b7f2582f450f0721e2dea6ae510c">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_24213db0658050cbc3f0f09fb0ed7e3973de54a5.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\d7b4373a2ad60d275fd2b77650920c6350f1f192\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="2c73e2a93e00abd240e495c1e62217e53904a3f3">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_70d8b8dce6a30674b83f322c954557fc28d7c363.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\30eef52fe03ccfef4ddb936222facc4b182fa88e\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="5594a368622908d89c47d9a391aa2724fe046c35">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_88906569ebb65cc1b55cd318c1d15ec7e28e99f2.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\a159851b8a8bfa896e83a3a762ec25c91ef5f092\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="377c5f26ebf67f3fa6ef2f663a58cac7ce647dde">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_5e3e31275f83a80d3d5e3bf904ac8d577e73733b.jar" />
+        sha1="dae0d68af4c87df40eca67069861e53b7cefaaa0">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_02b8b3296266c4e5aede5b37ad016a94eca4d955\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -245,31 +245,13 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_afd799aeeb15afea8c959022487b7bfe152bc246.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\d319bbd61caaea5a6b7701de5c80c3626275d345\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\0e8b75d95809bc91bddeb4fde849809c613ad96f\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="f15e20dd7bcde7c688cfda44d0c8320a5c1c24b8">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_9a663e1d49cefbd2b116d1a7d8d9a49635e83445.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\ca94a564ebe22a077f142b74524b4096e2018149\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="057fb316bed8467398333f30926c2d5506e275b2">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_c670f3810245f53a1c2f43451f3956c0ace64026.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\06eb7e0210d2e4130d104d3bab350a8377c4c96a\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="95519720620b553f63afc789beba9ad582807f7c">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_e8456024fba90137795a11c0ad6169ac556a3fcf.jar" />
+        sha1="c1b91bc7e480ab100d0397b16c93732e26fd10eb">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_05d7111d6939d9bf25ff6c4b579d4e9ef45dd3c5\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -282,66 +264,30 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\22092407588efb33d6972c13a25fbcfa414959e1\output\jars\classes.jar"
+        jar="C:\Users\mjtak\.android\build-cache\06eb7e0210d2e4130d104d3bab350a8377c4c96a\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
-        sha1="1b12397bc9f342b29d9e9108978828f99a6da579">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_29f70aa4c43841093e7d7b408f4e0cc14be77a2e.jar" />
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_e8456024fba90137795a11c0ad6169ac556a3fcf.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\09c325d4703a045e66d480f309cc108944228872\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\103effcd0d605f35e09b8573e65e9827dc5e6a8b\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c6706cc7c8c3093560edd55d322218afe7798aa9">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_2391177ea43e80020b9d54a6944f96f78d17596f.jar" />
+        sha1="a25b0b5aec89681b95d32780ad7904c1e1e4c679">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_99ff9f8d15493e89dab140866206518d7e0e5b13\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.0.0\4c8d1536dba3812cc1592090dc20c47a4ed3c35e\okhttp-2.0.0.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="4c8d1536dba3812cc1592090dc20c47a4ed3c35e">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\okhttp-2.0.0_653ef3de83787581e2b09e79263052f23d48fece.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\2ac34425794ac8262b510b4c3938a493a1788205\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="63b03eaa1aa9b9431c7638841175f9842dcbf274">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_0b7856b447c31300efc720c5d25825063969d93d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\d1b91365c3f0a52be648b9d4704cfe97ff3e6798\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="b5b6af36bacf1d812cd3dc45f9dcab9ea471ed91">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_0ca84305970cf4ab43b1754dd89ec435a855df44.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\ad09bad619a205cf7a8dede67f0df29868ef3b12\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="2c2f1b3f82c027e98f56bb0154de0acbcce42e6d">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_e3e983c8ba6339c4fdf5b72f7f846a22019a1876.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\dd3a211c27cc98e24f4f2d2f60eb7fc4f549e74c\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="fc3036436defd3070337b7191c50a136ebca7f8f">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_4e28e9acea99517f0322c7388c754b95ee5cb017.jar" />
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.3.1_dc8ba0a0eb1c0f2a073c709c9eed328384564737\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -353,31 +299,49 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_e5dee0c78d157ae8f1081f1814570a5667f94ef5.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\f07c672c0e06240e1987a76f793d8218b02b6c52\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\glide-3.7.0_37180eff23ea08fda421fe1759bb4df5fef46379.jar" />
+        sha1="8544f739799dd15db63927073a21312864ab0bfd">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a3a157f8a224c1ecfe3de0451b02ac06a36f9af1\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\95749b10411e86d3a20715ed3b7d27375daa4ae2\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\7fe58749b2edd8a2dbcf6e2ad40ac336eb845cf4\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="0bffdc0bd4f7ca0e27c5bfeef39569f8da00aa26">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_2d4d03966b766251d6b09cfbae01d833849ae9f8.jar" />
+        sha1="2430e711762a749feb00b3d64858ca4768251b9d">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ba558caeb7793844b1b97b8f6284f8345bcde26b\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\c769f8408709fa77457bc62cfd1075a8e7723ca3\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\f6569379952f87582f163747b2b83d2555a422fc\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="e1625e48a836779b5fa141d22e5d05563aaccc9a">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_f9906770b1df8016a5b2a28d8d86aa954f250076.jar" />
+        sha1="af13a350b71b437ebf4be335d02a8f785c39b111">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_41bf5e7d5cc5977683919a603c962c7f0b5d1066\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\3f1f8cc87e02d32a24db840e5d19b8345520d1e4\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="eea424e61a0c85b93a0e477565314a58136abaea">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2be11ec231c96bccdc699e9202ce59fbfc4756ba\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\9b7297da3189bce3dcfd25a69b18ded6a10af6e3\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_81081d138079a53a35f5b6ec019705a5dcd01ad8\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -390,15 +354,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\f7ed9bed7f807a7a2b9b12759469793bcda9b4ff\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="416fb9ee2fd6e7af0bba04b01d90cb475b1e2074">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_1e40f3d32e4af4ed894665cf991a10b64cf2655f.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\mjtak\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
         jumboMode="false"
         optimize="true"
@@ -407,58 +362,85 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.2_abce32d77fb421d2b25756ec692c5d15ca28e7a3.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\1cf997668902a76290b21b5e0394eccc5e3d0ac5\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\882e9e1d9b7bbd66f1996359876415f1f8f4f419\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="914f5d3e3ace66080e59613708f06d129a222e25">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_b3a856149525fe9b2af29c75e852a8b7d80f1755.jar" />
+        sha1="70ffe00aaf049893f59d1dad57bd82992faa38ef">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7bc66be085f5bacb58d6ba042d073afb61e4e8a6\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\6f1c5627da599a4864ef700ead8439937868bd73\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\3715ed76b87633a1294f87caaa1675eceff6b1f7\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="7c24e2e9773fb498e390ce973db382c3ddcf748e">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_b1368ee7d405faf3fde5fe81b283d453dfeec22d.jar" />
+        sha1="dd282bdeaa904c59d77e57dedd7e0a241c9b679d">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_35939d93ac5d9b596266dd207c36530eff46f53f\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\29ee759e0d86979195821cb5c283f89dc1da3fbb\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\04c87aad7418651fcdc339e9217efb2eda4e52e9\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="364364bf77b4a71afc5930fc3ae57b3f0eea637c">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_dceb3cccb7812256af63a03e351432c4808c2031.jar" />
+        sha1="6b3430725095bd46b785e97bd34240826c27b4db">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c8558e6bfddff294e91e1db0c8b04fc6d1027de0\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\f77c4af64e005d5272f9928914c54d389ec0812f\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\bca9db2b84bd3b349c3cbaac9f6c3410bf8677ed\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c175c3009577fad8b433703f5d7ac2dc21d3871f">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_280581dc49623ef89a4d3c9556fa62d584738d22.jar" />
+        sha1="fcae52a60bc07924d370b4d376116cd8f8581f54">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_45cd5767039843f950abcb6e9982d5a209866df6\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\37e5e6038a22852e6584e62646f68510249ce880\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\129045dfeb695961bd6397a0a5e6a5c09b59060b\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="f2cb88e7e28736d44e7e643deb80c9af1c3662c8">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_34b0d0badb6f262a91e059dd6f7db13984c3f727.jar" />
+        sha1="2b12b18c5518021cc71577c83d1290f8ddaa3c98">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2b755acaec1b5f528fa87506a96074fc9c47f7fd\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\c115f7dd9582bbd7fccb7ed7e65908cafbf2737e\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\8d1fa6cf8ef5523bb6d7e31f92ab2f49525fdc25\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c72b1515efbd8ad652e2d63582c8234a979b1e53">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_db35825db7df3c2ef4f915aba0f2d5bd751095e0.jar" />
+        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8eb53583653c9067a691c085320a027d84399a3b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\742a5804cc68a0676c3beea49a29c4e4d576156f\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="41f47bbcd281fdb1e42e220220ab3bfa1da591e0">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_363b365609f1d2850b43c125b8765a37c4fb1b6c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.0.0\4c8d1536dba3812cc1592090dc20c47a4ed3c35e\okhttp-2.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4c8d1536dba3812cc1592090dc20c47a4ed3c35e">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\okhttp-2.0.0_653ef3de83787581e2b09e79263052f23d48fece\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.0.0\2534c458682c73f5b9871131ab3098d3f987ca3\okio-1.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="02534c458682c73f5b9871131ab3098d3f987ca3">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.0.0_ea395d309023bfcac07e0a32d1a2ce051f3b81c7\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -470,22 +452,31 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_00bbab6491978d3a924a14e31b877287e21f10ca.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\283cb991b3c43adfb0e88e2a7b40fd1b44349413\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\cab258f65ce7884e68e52a717bd761fbe7c909ec\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="d8942ee348aaa9341f08f7e2437063893fe27542">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_22c16ae84c28a1446e7764acf0fa461c8c18327b.jar" />
+        sha1="f47f4d5bdfd7d7bf330945b8a7ccce4ab437a710">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_868a629bb8696031d9b1ea03c51f813a9e85e107\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\2925821be00af1c2f727a3df4af6818e4f8d1bfb\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\7d49c8fed47443aa238807372fb35c5a56a08bae\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="02b91f8efa91dcdf5c555ee24b7f006f02cd0f8b">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_4bbc734a5dcc822fb90e95426855a7a035395ddf.jar" />
+        sha1="ed87ccdcb70c17d71ba4e6e4ac16afa62d3c49fb">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_678efaeca350317970531fcdb6b15e72e6808e90\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\a6986aa2e2a3643bf1e94ea9e41decc3e3c839e3\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="f5ff5e3811e8c9485fd27f9052ae4d4d23a22d9d">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_736fa9d4994476237edb584c08286523b249c207\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -497,40 +488,40 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_99a1e6673a0df0ad031b9c383f440d84717d0b0e.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\08d62ae7fed95b82e39ea3cd1458580090fdf92a\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\8b544ffbe6d4ea9149353db080d204f840b7a0de\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c8bf878c09bf0df6ae76eb6c2df38c6a186b38b7">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_4b83f989a6c0fc97dd1cff6d1ecf092dc724bcbe.jar" />
+        sha1="a5d52089bf4d31537232bb6bcb70cee817d8a374">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2494b5e3c9d249f05681c93c05acdcdab49ff8c0\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\44ed2e13309b15bd05b565c6527feee96dfc0e41\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\6361dc0f85398d61e3b0cf3decfbaf8b1bbe89c3\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="56d68d1174b9c1e368017a850b62b12429f39757">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_308fac2f48993ed149ecb464d8682275d39b1e95.jar" />
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8a028df999892f1d49c278084b7eaacc7e7670c6\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\d99b2c1cb8607ddf7488fa49f70a88bc923d2837\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\c2a4361cf3f401c936770f3767c010a79f7431bf\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="9be5e957849eb82ad9addf9bdb2896de8bf5654b">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_86372f04c42c7b74ff72cdbc7caa147c6dff5af7.jar" />
+        sha1="43e9789bd3240271265ab30ce1be9f224843f5a8">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2b24bddd18e6550276e29f3dd7e0892137261196\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\2317f7756ce379c4292187608a541296e195bb30\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\91477e1e52a3597cebf0e3cc27d8ec2e8ee636a5\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="4b685077cdb08cf7ae8b61afd1fe910e47d91b9a">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_83bfa2d8b02899e9ce6414388609f9c561e8a62f.jar" />
+        sha1="bfba7cf662f7e3e2cfeb92226c6b84c08e590225">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9a9f1e90b3d5014fdda57db6ef077b339403c647\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -543,21 +534,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\20f93a73ba3b1a97c78daa3d0f317f931f124c53\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="3ac08c35419ab7cf9146969de471768dbe502f0f">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_97fb8e5da77fb4e3db87b8bc3f1bb946339cbbb9.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\mjtak\.android\build-cache\d01abb4f759d66e354e75584a59ad9fd2a602c12\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="150252b33b00274cc868578ade018fda0d43a3eb">
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_8a600d05906bfaa64a2682bc1954216f307ba49a.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\80dee67425d409f1f37abe179a8567e43a69e88d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="576570f46ff6ccc69a984af9e55ddd58d9549270">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c188609dd4d2ab22d1cb28aaaeec2d683d91aeba\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -569,22 +560,22 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\2\universal-image-loader-1.9.5_3c598eafa8b785ad1cefd9b6b46e1dbf7a56b489\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\576b4dbd6c2477f0e374e93a6871705da46a7064\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\30eef52fe03ccfef4ddb936222facc4b182fa88e\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c6aa915c08cfd82780c10d4b957018bf819a48e2">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_005c34a0204262e1344ad8f7a362c41faaefb64b.jar" />
+        sha1="5594a368622908d89c47d9a391aa2724fe046c35">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_88906569ebb65cc1b55cd318c1d15ec7e28e99f2\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\0e8b75d95809bc91bddeb4fde849809c613ad96f\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\9abc421f9840d3bd1e0c8badd74d7a8fd2817522\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c1b91bc7e480ab100d0397b16c93732e26fd10eb">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_05d7111d6939d9bf25ff6c4b579d4e9ef45dd3c5.jar" />
+        sha1="ffd0ddf5e57b4d60c4a3fbcd38fa20349a0cebd1">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f1c36b665b9a08ac0ea4e92499bb8514931acb43\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -596,76 +587,202 @@
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_5b32c9c7eaa9d49b71cadee149863a87d82d62ce.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\25731a653c4b0fe2ef2d4de178335fde8a63e1d9\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\a159851b8a8bfa896e83a3a762ec25c91ef5f092\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="76ea35b41786082af23db898ca9e0fc07cc71fb9">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_387ed53f5880680b7ff71d314081d25ee52b18ad.jar" />
+        sha1="377c5f26ebf67f3fa6ef2f663a58cac7ce647dde">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5e3e31275f83a80d3d5e3bf904ac8d577e73733b\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\eab9196bd7ddbd86c84a8484ae2008a2bba28212\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\334107b1d656628b7a0cdd4941e478d09bc8b43f\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="dae0d68af4c87df40eca67069861e53b7cefaaa0">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_02b8b3296266c4e5aede5b37ad016a94eca4d955.jar" />
+        sha1="e5b429c146094a612134910688d169ec08deeefb">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9b73843ebf65a0effddc8db9a5f788a73bde63ec\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\41d1dad127fe45bac609e246a647ef5e01e9cb0e\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\3392f947187474f94985b9f8717e70304a1f9303\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="34c23b5894b4f24d566bfc33e0e25462c6436b78">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_ed397fe127a8690f6ac26828de19521bf3c5026d.jar" />
+        sha1="2c379c235d7983201bb83edfc3c60bb0dafb5805">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_115cea63ed7095f0e9ca3c9fc3898183543ce6a3\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\103effcd0d605f35e09b8573e65e9827dc5e6a8b\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\d99b2c1cb8607ddf7488fa49f70a88bc923d2837\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="a25b0b5aec89681b95d32780ad7904c1e1e4c679">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_99ff9f8d15493e89dab140866206518d7e0e5b13.jar" />
+        sha1="9be5e957849eb82ad9addf9bdb2896de8bf5654b">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_86372f04c42c7b74ff72cdbc7caa147c6dff5af7\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\7fe58749b2edd8a2dbcf6e2ad40ac336eb845cf4\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\dedc94ea272abec860dc1a377462acfa2d2ac9b3\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="2430e711762a749feb00b3d64858ca4768251b9d">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_ba558caeb7793844b1b97b8f6284f8345bcde26b.jar" />
+        sha1="e7f890dd2539b7f2582f450f0721e2dea6ae510c">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_24213db0658050cbc3f0f09fb0ed7e3973de54a5\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\f07c672c0e06240e1987a76f793d8218b02b6c52\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\d319bbd61caaea5a6b7701de5c80c3626275d345\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="8544f739799dd15db63927073a21312864ab0bfd">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_a3a157f8a224c1ecfe3de0451b02ac06a36f9af1.jar" />
+        sha1="f15e20dd7bcde7c688cfda44d0c8320a5c1c24b8">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9a663e1d49cefbd2b116d1a7d8d9a49635e83445\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\3f1f8cc87e02d32a24db840e5d19b8345520d1e4\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\dd3a211c27cc98e24f4f2d2f60eb7fc4f549e74c\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="eea424e61a0c85b93a0e477565314a58136abaea">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_2be11ec231c96bccdc699e9202ce59fbfc4756ba.jar" />
+        sha1="fc3036436defd3070337b7191c50a136ebca7f8f">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4e28e9acea99517f0322c7388c754b95ee5cb017\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\mjtak\.android\build-cache\f6569379952f87582f163747b2b83d2555a422fc\output\jars\classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\06eb7e0210d2e4130d104d3bab350a8377c4c96a\output\jars\classes.jar"
+        jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="af13a350b71b437ebf4be335d02a8f785c39b111">
-        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\classes_41bf5e7d5cc5977683919a603c962c7f0b5d1066.jar" />
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_e8456024fba90137795a11c0ad6169ac556a3fcf\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\d7b4373a2ad60d275fd2b77650920c6350f1f192\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="2c73e2a93e00abd240e495c1e62217e53904a3f3">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_70d8b8dce6a30674b83f322c954557fc28d7c363\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\0fb44009cc8e87f7774b58e92e4b75b67936c88a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_b8c07cb63dca58fe556a8e825ec6d5a0346a2810\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\ca94a564ebe22a077f142b74524b4096e2018149\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="057fb316bed8467398333f30926c2d5506e275b2">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c670f3810245f53a1c2f43451f3956c0ace64026\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\c769f8408709fa77457bc62cfd1075a8e7723ca3\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e1625e48a836779b5fa141d22e5d05563aaccc9a">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f9906770b1df8016a5b2a28d8d86aa954f250076\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\22092407588efb33d6972c13a25fbcfa414959e1\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="1b12397bc9f342b29d9e9108978828f99a6da579">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_29f70aa4c43841093e7d7b408f4e0cc14be77a2e\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.2_abce32d77fb421d2b25756ec692c5d15ca28e7a3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\0892da2ad6ff4b93cefae797bc4045734fca1b17\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_e5dee0c78d157ae8f1081f1814570a5667f94ef5\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\ad09bad619a205cf7a8dede67f0df29868ef3b12\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="2c2f1b3f82c027e98f56bb0154de0acbcce42e6d">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_e3e983c8ba6339c4fdf5b72f7f846a22019a1876\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\d1b91365c3f0a52be648b9d4704cfe97ff3e6798\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b5b6af36bacf1d812cd3dc45f9dcab9ea471ed91">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0ca84305970cf4ab43b1754dd89ec435a855df44\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\09c325d4703a045e66d480f309cc108944228872\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c6706cc7c8c3093560edd55d322218afe7798aa9">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2391177ea43e80020b9d54a6944f96f78d17596f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\2ac34425794ac8262b510b4c3938a493a1788205\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="63b03eaa1aa9b9431c7638841175f9842dcbf274">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0b7856b447c31300efc720c5d25825063969d93d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\95749b10411e86d3a20715ed3b7d27375daa4ae2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0bffdc0bd4f7ca0e27c5bfeef39569f8da00aa26">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2d4d03966b766251d6b09cfbae01d833849ae9f8\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\f7ed9bed7f807a7a2b9b12759469793bcda9b4ff\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="416fb9ee2fd6e7af0bba04b01d90cb475b1e2074">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1e40f3d32e4af4ed894665cf991a10b64cf2655f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.android\build-cache\f46d9575bbecdd0d39a6e0134aee3d375317d61b\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d4cf6227dd6a2ceff0f7dcf0c324380b7abf2c28">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_afd799aeeb15afea8c959022487b7bfe152bc246\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -675,6 +792,15 @@
         revision="25.0.2"
         sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
         <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\pre-dexed\debug\support-annotations-25.3.1_dc8ba0a0eb1c0f2a073c709c9eed328384564737.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\mjtak\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="C:\Users\mjtak\AndroidStudioProjects\CreateMyJourney\app\build\intermediates\transforms\dex\debug\folders\1000\10\glide-3.7.0_37180eff23ea08fda421fe1759bb4df5fef46379\classes.dex" />
     </item>
     <item
         is-multidex="false"

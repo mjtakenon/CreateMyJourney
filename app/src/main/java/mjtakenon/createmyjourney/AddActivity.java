@@ -22,11 +22,12 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import mjtakenon.createmyjourney.R;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -42,7 +43,6 @@ public class AddActivity extends AppCompatActivity {
         EditText textPlaceBegin = (EditText) findViewById(R.id.textPlaceBegin);
         EditText textPlaceEnd = (EditText) findViewById(R.id.textPlaceEnd);
         EditText textPlaceDist = (EditText) findViewById(R.id.textPlaceDist);
-        EditText textDurationDist = (EditText) findViewById(R.id.textDurationDist);
         ImageButton buttonDateBegin = (ImageButton) findViewById(R.id.buttonDateBegin);
         ImageButton buttonDateEnd = (ImageButton) findViewById(R.id.buttonDateEnd);
         ImageButton buttonTimeBegin = (ImageButton) findViewById(R.id.buttonTimeBegin);
@@ -97,7 +97,6 @@ public class AddActivity extends AppCompatActivity {
                 EditText textPlaceBegin = (EditText) findViewById(R.id.textPlaceBegin);
                 EditText textPlaceEnd = (EditText) findViewById(R.id.textPlaceEnd);
                 EditText textPlaceDist = (EditText) findViewById(R.id.textPlaceDist);
-                EditText textDurationDist = (EditText) findViewById(R.id.textDurationDist);
 
                 //入力終了、旅画面への移行
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
@@ -108,14 +107,6 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra("textPlaceBegin",textPlaceBegin.getText().toString());
                 intent.putExtra("textPlaceEnd",textPlaceEnd.getText().toString());
                 intent.putExtra("textPlaceDist",textPlaceDist.getText().toString());
-                try {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(dfTime.parse(textDurationDist.getText().toString()));
-                    intent.putExtra("intDurationDist",calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
-                } catch (ParseException e) {
-                    intent.putExtra("intDurationDist",0);
-                    e.printStackTrace();
-                }
 
                 startActivity(intent);
             }

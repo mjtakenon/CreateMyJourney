@@ -219,52 +219,19 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/viewDist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:text="目的地" />
 
-                <TextView
-                    android:id="@+id/viewDist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="目的地" />
-
-                <TextView
-                    android:id="@+id/viewDurationDist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="滞在予定時間" />
-            </LinearLayout>
-
-            <LinearLayout
+            <EditText
+                android:id="@+id/textPlaceDist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/textPlaceDist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:text="浜松城" />
-
-                <EditText
-                    android:id="@+id/textDurationDist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="text|time"
-                    android:text="01:00" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:text="浜松城" />
 
             <Button
                 android:id="@+id/buttonSearch"
