@@ -28,8 +28,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import mjtakenon.createmyjourney.R;
-
 public class AddActivity extends AppCompatActivity {
 
     @Override

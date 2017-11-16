@@ -1,6 +1,7 @@
 package mjtakenon.createmyjourney;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Time;
 import android.util.Log;
@@ -27,6 +29,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.okhttp.Call;
@@ -55,8 +65,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-public class EditJourneyActivity extends AppCompatActivity {
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import android.support.v4.app.FragmentActivity;
 
+// 元はAppCompatActivityだったけどFragmentActivityに変えた
+public class EditJourneyActivity extends FragmentActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +94,7 @@ public class EditJourneyActivity extends AppCompatActivity {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
 
-                setPlaces(layoutPlan,mapTimeToPlace);
+                setPlaces(layoutPlan, mapTimeToPlace);
             }
         });
 
@@ -90,23 +104,54 @@ public class EditJourneyActivity extends AppCompatActivity {
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
 
         //出発地、目的地、到着地を追加
-        if(intent.getStringExtra("textPlaceBegin") != null){
-            Place placeBegin = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceBegin"),null,null,intent.getStringExtra("textTimeBegin"));
-            mapTimeToPlace.put(placeBegin.getId(),placeBegin);
+        if (intent.getStringExtra("textPlaceBegin") != null) {
+            Place placeBegin = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceBegin"), null, null, intent.getStringExtra("textTimeBegin"));
+            mapTimeToPlace.put(placeBegin.getId(), placeBegin);
         }
-        if(intent.getStringExtra("textPlaceDist") != null) {
-            Place placeDist = new Place(mapTimeToPlace.size(),intent.getStringExtra("textPlaceDist"),null,intent.getIntExtra("intDurationDist",0),null);
+        if (intent.getStringExtra("textPlaceDist") != null) {
+            Place placeDist = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceDist"), null, intent.getIntExtra("intDurationDist", 0), null);
             //getTimeRequired(this,intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textPlaceDist"),intent.getStringExtra("textTimeBegin"));
-            mapTimeToPlace.put(placeDist.getId(),placeDist);
+            mapTimeToPlace.put(placeDist.getId(), placeDist);
         }
-        if(intent.getStringExtra("textPlaceEnd") != null) {
+        if (intent.getStringExtra("textPlaceEnd") != null) {
             Place placeEnd = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceEnd"), intent.getStringExtra("textTimeEnd"), null, null);
             mapTimeToPlace.put(placeEnd.getId(), placeEnd);
         }
 
-        setPlaces(layoutPlan,mapTimeToPlace);
+        setPlaces(layoutPlan, mapTimeToPlace);
+
+        //TODO Mapが表示されない
+
+        // mapRouteは取得できるけどもgetMapAsyncで表示されない
+        //MapView mapRoute = (MapView) findViewById(R.id.mapRoute);
+        //mapRoute.getMapAsync(this);
+
+        // findFragmentByIdでfragmentが取得できない(nullが帰ってくる)くて落ちる
+         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMap);
+         mapFragment.getMapAsync(this);
+
+        /*MapFragment mapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentMap, mapFragment);
+        fragmentTransaction.commit();*/
+
+
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        googleMap.setTrafficEnabled(true);
+        googleMap.setIndoorEnabled(true);
+        googleMap.setBuildingsEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
 
     private void setPhotozouImageByWord(final Context context, final ImageView imageview, final String word) {
         new AsyncTask<String, Void, String>() {
@@ -274,11 +319,12 @@ public class EditJourneyActivity extends AppCompatActivity {
         }.execute(word);
     }
 
-    //所要時間を取得、placesのtextにセット
+    //Google Directionsを使って所要時間を取得、placesのtextにセット
     private void setTimeRequired(final Activity activity, final TreeMap<Integer,Place> places) {
         new AsyncTask<Void, Void, ArrayList<Integer>>() {
             String apiUrl;
             ProgressDialog progressDialog;
+            String responseJSON;
 
             @Override
             protected void onPreExecute() {
@@ -351,7 +397,8 @@ public class EditJourneyActivity extends AppCompatActivity {
                 ArrayList<Integer> timeSecs = new ArrayList<Integer>();
 
                 try {
-                    JSONObject jo = new JSONObject(response.body().string());
+                    responseJSON = response.body().string();
+                    JSONObject jo = new JSONObject(responseJSON);
                     if (!jo.getString("status").equals("OK")) {
                         return null;
                     }
@@ -365,10 +412,6 @@ public class EditJourneyActivity extends AppCompatActivity {
                     return null;
                 }
                 return timeSecs;
-            }
-
-            @Override
-            protected void onProgressUpdate(Void... params) {
             }
 
             @Override
@@ -478,8 +521,7 @@ public class EditJourneyActivity extends AppCompatActivity {
         return address;
     }
 
-    private void addPlaceRow(LinearLayout layout,Place place)
-    {
+    private void addPlaceRow(LinearLayout layout,Place place) {
         //時間とか表示するビューを作成
         TextView textTime = new TextView(this);
 
@@ -529,8 +571,8 @@ public class EditJourneyActivity extends AppCompatActivity {
     }
 
     //場所と追加用ボタンを交互に配置
-    private void setPlaces(LinearLayout layout,TreeMap<Integer,Place> places)
-    {
+    private void setPlaces(LinearLayout layout,TreeMap<Integer,Place> places) {
+
         Iterator<Integer> it = places.keySet().iterator();
         while (it.hasNext()) {
             Integer key = it.next();
@@ -545,4 +587,5 @@ public class EditJourneyActivity extends AppCompatActivity {
     final DateFormat dfTime = new SimpleDateFormat("HH:mm");
 
     private TreeMap<Integer,Place> mapTimeToPlace = new TreeMap<Integer,Place>();
+
 }
