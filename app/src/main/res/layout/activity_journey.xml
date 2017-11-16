@@ -24,15 +24,16 @@
 
                 <LinearLayout
                     android:id="@+id/layoutPlan"
-                    android:layout_width="300dp"
+                    android:layout_width="350dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                 </LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cardSuggest"
+                <fragment
+                    android:id="@+id/fragmentMap"
+                    android:name="com.google.android.gms.maps.MapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
