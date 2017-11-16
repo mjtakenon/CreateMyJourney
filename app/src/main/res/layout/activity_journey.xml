@@ -31,12 +31,12 @@
 
                 </LinearLayout>
 
-                <fragment
-                    android:id="@+id/fragmentMap"
+                <LinearLayout
+                    android:id="@+id/fragmentMapRoot"
+                    android:orientation="horizontal"
                     android:name="com.google.android.gms.maps.MapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_height="match_parent"/>
 
             </LinearLayout>
 
