@@ -121,12 +121,6 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
 
         setPlaces(layoutPlan, mapTimeToPlace);
 
-        //TODO Mapが表示されない
-
-        // mapRouteは取得できるけどもgetMapAsyncで表示されない
-        //MapView mapRoute = (MapView) findViewById(R.id.mapRoute);
-        //mapRoute.getMapAsync(this);
-
         // findFragmentByIdでfragmentが取得できない(nullが帰ってくる)くて落ちる
         SupportMapFragment mapFragment = new SupportMapFragment();
         FragmentManager manager = getSupportFragmentManager();
@@ -134,19 +128,11 @@ public class EditJourneyActivity extends FragmentActivity implements OnMapReadyC
         ft.add(R.id.fragmentMapRoot, mapFragment, "mapFragment");
         ft.commit();
         mapFragment.getMapAsync(this);
-
-
-        /*MapFragment mapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentMap, mapFragment);
-        fragmentTransaction.commit();*/
-
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(true);
         googleMap.setIndoorEnabled(true);
         googleMap.setBuildingsEnabled(true);
