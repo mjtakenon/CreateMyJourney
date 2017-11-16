@@ -7,33 +7,29 @@ package mjtakenon.createmyjourney;
 
 //目的地
 public class Place {
-    private Integer id;                 //訪れる時刻を変更するためのID
-    private String  name;               //訪れる場所名
-    private String  arrivalTime;       //到着する時刻
-    private Integer durationMinute;   //訪れている時間(分)
-    private String  departureTime;     //出発する時刻
+    private int     id;           //訪れる時刻を変更するためのID
+    private String  time;        //到着する時刻
+    private int     duration;   //訪れている時間(分)
+    private String  name;        //訪れる場所名
 
-    public Place(Integer id) {
+    public Place(int id) {
         this.id = id;
     }
 
-    public Place(Integer id, String name, String arrivalTime, Integer durationMinute, String departureTime) {
+    public Place(int id, String name, String time, int duration) {
         this.id = id;
         this.name = name;
-        this.arrivalTime = arrivalTime;
-        this.durationMinute = durationMinute;
-        this.departureTime = departureTime;
+        this.time = time;
+        this.duration = duration;
     }
 
-    public Integer getId() {return id;}
+    public int getId() {return id;}
     public String getName() {return name;}
-    public String getArrivalTime() {return arrivalTime;}
-    public Integer getDurationMinute() {return durationMinute;}
-    public String getDepartureTime() {return departureTime;}
+    public String getTime() {return time;}
+    public int getDuration() {return duration;}
 
-    public void setId(Integer id) {this.id = id;}
+    public void setId(int id) {this.id = id;}
     public void setName(String name) {this.name = name;}
-    public void setArrivalTime(String arrivalTime) {this.arrivalTime = arrivalTime;}
-    public void setDurationMinute(Integer durationMinute) {this.durationMinute = durationMinute;}
-    public void setDepartureTime(String departureTime) {this.departureTime = departureTime;}
+    public void setTime(String time) {this.time = time;}
+    public void setDuration(int duration) {this.duration = duration;}
 }
