@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //サブアクティビティに移動
-                Intent intent = new Intent(getApplication(), AddActivity.class);
+                //Intent intent = new Intent(getApplication(), AddActivity.class);
+                Intent intent = new Intent(getApplication(), TestActivity.class);
                 startActivity(intent);
             }
         });
