@@ -71,7 +71,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import android.support.v4.app.FragmentActivity;
 
 // 元はAppCompatActivityだったけどFragmentActivityに変えた
-public class EditJourneyActivity extends FragmentActivity implements OnMapReadyCallback {
+public class EditJourneyActivity extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
