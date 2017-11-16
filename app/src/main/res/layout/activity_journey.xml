@@ -31,7 +31,31 @@
                     android:orientation="vertical">
 
                 </LinearLayout>
+<<<<<<< HEAD
             </android.support.v4.widget.NestedScrollView>
+=======
+
+                <fragment
+                    android:id="@+id/fragmentMap"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <!--ここわからん(flagmentにした方がいいのか)-->
+                    <!--class="com.google.android.gms.maps.SupportMapFragment" />-->
+                <!--AndroidStudioのマップアプリからパクってきた部分-->
+                <!--<fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    tools:context="mjtakenon.createmyjourney.MapsActivity"/>
+                    -->
+
+            </LinearLayout>
+>>>>>>> origin
 
             <LinearLayout
                 android:id="@+id/fragmentMapRoot"
