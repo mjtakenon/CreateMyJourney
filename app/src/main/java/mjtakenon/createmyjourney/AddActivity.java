@@ -120,6 +120,10 @@ public class AddActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        //TODO GooglePlaceAPIのオートコンプリートを使いてえな
+        //https://developers.google.com/places/android-api/?hl=ja
     }
 
 
