@@ -2,6 +2,7 @@ package mjtakenon.createmyjourney;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -36,7 +37,7 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
 
         EditText textDateBegin = (EditText) findViewById(R.id.textDateBegin);
-        EditText textDateEnd = (EditText) findViewById(R.id.textDateEnd);
+//        EditText textDateEnd = (EditText) findViewById(R.id.textDateEnd);
         EditText textTimeBegin = (EditText) findViewById(R.id.textTimeBegin);
         EditText textTimeEnd = (EditText) findViewById(R.id.textTimeEnd);
         EditText textPlaceBegin = (EditText) findViewById(R.id.textPlaceBegin);
@@ -50,7 +51,7 @@ public class AddActivity extends AppCompatActivity {
         Button buttonSearch = (Button) findViewById(R.id.buttonSearch);
 
         textDateBegin.setText(dfDate.format(dateTime));
-        textDateEnd.setText(dfDate.format(dateTime));
+//        textDateEnd.setText(dfDate.format(dateTime));
 
         textTimeBegin.setText("09:00");
         textTimeEnd.setText("19:00");
@@ -87,11 +88,12 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
+        //TODO 決定押した後の硬直長すぎィ
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText textDateBegin = (EditText) findViewById(R.id.textDateBegin);
-                EditText textDateEnd = (EditText) findViewById(R.id.textDateEnd);
+//                EditText textDateEnd = (EditText) findViewById(R.id.textDateEnd);
                 EditText textTimeBegin = (EditText) findViewById(R.id.textTimeBegin);
                 EditText textTimeEnd = (EditText) findViewById(R.id.textTimeEnd);
                 EditText textPlaceBegin = (EditText) findViewById(R.id.textPlaceBegin);
@@ -100,24 +102,30 @@ public class AddActivity extends AppCompatActivity {
                 EditText textDurationDist = (EditText) findViewById(R.id.textDurationDist);
 
                 //入力終了、旅画面への移行
-                Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
-                intent.putExtra("textDateBegin",textDateBegin.getText().toString());
-                intent.putExtra("textDateEnd",textDateEnd.getText().toString());
-                intent.putExtra("textTimeBegin",textTimeBegin.getText().toString());
-                intent.putExtra("textTimeEnd",textTimeEnd.getText().toString());
-                intent.putExtra("textPlaceBegin",textPlaceBegin.getText().toString());
-                intent.putExtra("textPlaceEnd",textPlaceEnd.getText().toString());
-                intent.putExtra("textPlaceDist",textPlaceDist.getText().toString());
+                Bundle bundle = new Bundle();
+                bundle.putString("mode", "add");
+                bundle.putString("textDateBegin",textDateBegin.getText().toString());
+//                intent.putExtra("textDateEnd",textDateEnd.getText().toString());
+                bundle.putString("textTimeBegin",textTimeBegin.getText().toString());
+                bundle.putString("textTimeEnd",textTimeEnd.getText().toString());
+                bundle.putString("textPlaceBegin",textPlaceBegin.getText().toString());
+                bundle.putString("textPlaceEnd",textPlaceEnd.getText().toString());
+                bundle.putString("textPlaceDist",textPlaceDist.getText().toString());
+
                 try {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(dfTime.parse(textDurationDist.getText().toString()));
-                    intent.putExtra("intDurationDist",calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
+                    bundle.putInt("intDurationDist",calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
                 } catch (ParseException e) {
-                    intent.putExtra("intDurationDist",0);
+                    bundle.putInt("intDurationDist",0);
                     e.printStackTrace();
                 }
 
+                Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
+                intent.putExtras(bundle);
                 startActivity(intent);
+                //?
+                finish();
             }
         });
 

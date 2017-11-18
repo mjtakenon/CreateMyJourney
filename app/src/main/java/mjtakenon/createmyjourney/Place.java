@@ -16,8 +16,13 @@ public class Place {
     private String  departureTime;     //出発する時刻
     private LatLng  latLng;           //緯度経度
 
-    public Place(Integer id) {
+    public Place(Integer id, String name) {
         this.id = id;
+        this.name = name;
+        this.arrivalTime = null;
+        this.durationMinute = null;
+        this.departureTime = null;
+        this.latLng = null;
     }
 
     public Place(Integer id, String name, String arrivalTime, Integer durationMinute, String departureTime) {

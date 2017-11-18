@@ -1,7 +1,9 @@
 package mjtakenon.createmyjourney;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Time;
 import android.util.Log;
@@ -56,7 +59,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -88,8 +96,57 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //レイアウトを保存し元の画面に戻る?
-                finish();
+//                String journeyName = getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist");
+                final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
+                //旅の初期名は日付+目的地
+                if(getIntent().getExtras().getString("textDateBegin") != null && getIntent().getExtras().getString("textPlaceDist") != null) {
+                    viewJourneyName.setText(getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist"));
+                }
+                //旅名を入れるダイアログ
+                //TODO 日付とか旅行名を1行目に保存するためにCSVの形式を変える必要があるな?
+                new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
+                        .setPositiveButton("決定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
+                                try {
+                                    FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_PRIVATE);
+                                    outputStream.write((viewJourneyName.getText() + "\n").getBytes());
+                                    while (it.hasNext()) {
+                                        Integer key = it.next();
+                                        //マーカーの座標を場所の座標に設定
+                                        Place place = mapTimeToPlace.get(key);
+                                        String string = place.getName();
+                                        if(place.getArrivalTime() != null) {
+                                            string += "," + place.getArrivalTime();
+                                        } else {
+                                            string += ",";
+                                        }
+                                        if(place.getDurationMinute() != null) {
+                                            string += "," + place.getDurationMinute();
+                                        } else {
+                                            string += ",";
+                                        }
+                                        if(place.getDepartureTime() != null) {
+                                            string += "," + place.getDepartureTime();
+                                        } else {
+                                            string += ",";
+                                        }
+                                        string += "\n";
+                                        outputStream.write(string.getBytes());
+                                    }
+                                    outputStream.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    return;
+                                }
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -100,7 +157,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View view) {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
-
                 setPlaces(layoutPlan, mapTimeToPlace);
             }
         });
@@ -110,19 +166,40 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         //タイムラインは時刻を左、場所画像と場所を右にセットで積んでく
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
 
-        //出発地、目的地、到着地を追加
-        if (intent.getStringExtra("textPlaceBegin") != null) {
-            Place placeBegin = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceBegin"), null, null, intent.getStringExtra("textTimeBegin"));
-            mapTimeToPlace.put(placeBegin.getId(), placeBegin);
+        //Intentなしで起動した場合
+        if(intent == null) {
+            finish();
+            return;
         }
-        if (intent.getStringExtra("textPlaceDist") != null) {
-            Place placeDist = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceDist"), null, intent.getIntExtra("intDurationDist", 0), null);
-            //getTimeRequired(this,intent.getStringExtra("textPlaceBegin"),intent.getStringExtra("textPlaceDist"),intent.getStringExtra("textTimeBegin"));
-            mapTimeToPlace.put(placeDist.getId(), placeDist);
-        }
-        if (intent.getStringExtra("textPlaceEnd") != null) {
-            Place placeEnd = new Place(mapTimeToPlace.size(), intent.getStringExtra("textPlaceEnd"), intent.getStringExtra("textTimeEnd"), null, null);
-            mapTimeToPlace.put(placeEnd.getId(), placeEnd);
+
+        //TODO 読み込み画面からきてたらmapTimeToPlaceを読み込み、setPlacesを実行
+        //もし作成画面からきてたら出発地、目的地、到着地を追加
+        Bundle bundle = intent.getExtras();
+        if(bundle.getString("mode").equals("add")) {    //読み込み画面からきたFlagがいるか?
+            mapTimeToPlace = new TreeMap<Integer, Place>();
+            if (bundle.getString("textPlaceBegin") != null) {
+                Place placeBegin = new Place(mapTimeToPlace.size(), bundle.getString("textPlaceBegin"), null, null, bundle.getString("textTimeBegin"));
+                mapTimeToPlace.put(placeBegin.getId(), placeBegin);
+            }
+            if (bundle.getString("textPlaceDist") != null) {
+                Place placeDist = new Place(mapTimeToPlace.size(), bundle.getString("textPlaceDist"), null, intent.getIntExtra("intDurationDist", 0), null);
+                mapTimeToPlace.put(placeDist.getId(), placeDist);
+            }
+            if (bundle.getString("textPlaceEnd") != null) {
+                Place placeEnd = new Place(mapTimeToPlace.size(), bundle.getString("textPlaceEnd"), bundle.getString("textTimeEnd"), null, null);
+                mapTimeToPlace.put(placeEnd.getId(), placeEnd);
+            }
+        } else if (bundle.getString("mode").equals("load")) {
+            mapTimeToPlace = new TreeMap<Integer, Place>();
+            ArrayList<Integer> listId = bundle.getIntegerArrayList("id");
+            ArrayList<String> listName = bundle.getStringArrayList("name");
+            ArrayList<String> listArrivalTime = bundle.getStringArrayList("arrivalTime");
+            ArrayList<Integer> listDurationMinute = bundle.getIntegerArrayList("durationMinute");
+            ArrayList<String> listDepartureTime = bundle.getStringArrayList("departureTime");
+            for(int n = 0; n < listId.size(); n++) {
+                Place place = new Place(listId.get(n),listName.get(n),listArrivalTime.get(n),listDurationMinute.get(n),listDepartureTime.get(n));
+                mapTimeToPlace.put(listId.get(n),place);
+            }
         }
 
         setPlaces(layoutPlan, mapTimeToPlace);
@@ -201,7 +278,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     e.printStackTrace();
                     return null;
                 }
-
                 return imageUrl;
             }
 
@@ -371,7 +447,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 //TODO プログレスダイヤログが表示中にpauseすると落ちるらしい
-                progressDialog = new ProgressDialog(activity);
+                progressDialog = new ProgressDialog(EditJourneyActivity.this);
                 progressDialog.setMessage("検索中...");
                 progressDialog.show();
             }
@@ -573,21 +649,29 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         layout.addView(layoutTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
-    private void addDetourButton(LinearLayout layout) {
+    private void addDetourButton(LinearLayout layout, int id) {
         ImageButton buttonAddDetour = new ImageButton(this);
         buttonAddDetour.setImageResource(R.drawable.plus_black_small);
+        buttonAddDetour.setId(id);
+        buttonAddDetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO 経由地追加のウィンドウ開いて戻して
+                int id = v.getId();
+            }
+        });
+
         layout.addView(buttonAddDetour, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
     //場所と追加用ボタンを交互に配置
     private void setPlaces(LinearLayout layout, TreeMap<Integer, Place> places) {
-
         Iterator<Integer> it = places.keySet().iterator();
         while (it.hasNext()) {
             Integer key = it.next();
             addPlaceRow(layout, places.get(key));
             if (it.hasNext()) {
-                addDetourButton(layout);
+                addDetourButton(layout,places.get(key).getId()+AddButtonIdBegin);
             }
         }
         setTimeRequired(EditJourneyActivity.this, places);
@@ -661,7 +745,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
     final DateFormat dfTime = new SimpleDateFormat("HH:mm");
 
-    private TreeMap<Integer, Place> mapTimeToPlace = new TreeMap<Integer, Place>();
+    private TreeMap<Integer, Place> mapTimeToPlace = null;
 
     private JSONObject directionResponceJSON;
 
@@ -669,4 +753,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
     private Boolean mapReady = false;
     private GoogleMap googleMap;
+
+    private final Integer AddButtonIdBegin = 50;
 }
