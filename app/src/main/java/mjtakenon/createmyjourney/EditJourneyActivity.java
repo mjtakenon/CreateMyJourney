@@ -101,21 +101,24 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 //旅の初期名は日付+目的地
                 if(getIntent().getExtras().getString("textDateBegin") != null && getIntent().getExtras().getString("textPlaceDist") != null) {
                     viewJourneyName.setText(getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist"));
+                } else {
+                    viewJourneyName.setText(getIntent().getExtras().getString("journeyNames"));
                 }
                 //旅名を入れるダイアログ
-                //TODO 日付とか旅行名を1行目に保存するためにCSVの形式を変える必要があるな?
+                //TODO 日付とか無理やり取って1行目に保存したい
                 new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
                         .setPositiveButton("決定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
                                 try {
                                     FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_PRIVATE);
-                                    outputStream.write((viewJourneyName.getText() + "\n").getBytes());
+                                    //info,旅行名,旅行日時
+                                    outputStream.write(("info," + viewJourneyName.getText() + "\n").getBytes());
                                     while (it.hasNext()) {
                                         Integer key = it.next();
                                         //マーカーの座標を場所の座標に設定
                                         Place place = mapTimeToPlace.get(key);
-                                        String string = place.getName();
+                                        String string = "place," + place.getName();
                                         if(place.getArrivalTime() != null) {
                                             string += "," + place.getArrivalTime();
                                         } else {

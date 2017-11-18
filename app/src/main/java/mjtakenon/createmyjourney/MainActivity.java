@@ -1,5 +1,6 @@
 package mjtakenon.createmyjourney;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -87,15 +89,29 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Bundle bundle = new Bundle();
                 bundle.putString("mode","load");
+
                 bundle.putIntegerArrayList("id",listId);
                 bundle.putStringArrayList("name",listName);
                 bundle.putStringArrayList("arrivalTime",listArrivalTime);
                 bundle.putIntegerArrayList("durationMinute",listDurationMinute);
                 bundle.putStringArrayList("departureTime",listDepartureTime);
+                bundle.putString("journeyNames",journeyNames.get(position));
 
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
+            }
+        });
+
+        listJourney.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ListView listView = (ListView) parent;
+                journeyNames.remove(position);
+                listPlaces.remove(position);
+                saveJourneyList();
+                loadJourneyList(listView);
+                return true;
             }
         });
     }
@@ -112,9 +128,6 @@ public class MainActivity extends AppCompatActivity {
     //TODO Journey名が保存されねえな
     //csvから旅リスト読み込み
     Boolean loadJourneyList(ListView listJourney) {
-        ArrayList<String> journeyNames = new ArrayList<String>();
-
-        //listJourney.removeAllViews();
         try {
             InputStream inputStream = openFileInput("savedJourney.csv");
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -122,41 +135,43 @@ public class MainActivity extends AppCompatActivity {
 
             //旅の経由地の配列が複数
             listPlaces = new ArrayList<ArrayList<Place>>();
+            //旅の名前の配列
+            journeyNames = new ArrayList<String>();
             //1つの旅の経由地の配列
             ArrayList<Place> places = null;
             String line;
-            Integer id = 0;
-            //TODO クソ汚いソースなんとかして
+            Integer placeId = 0;
+            Integer journeyId = 0;
             while ((line = bufferReader.readLine()) != null) {
                 String[] string = line.split(",");
-                if (string.length == 1) {           //最初の行
-                    journeyNames.add(string[0]);
-                    id = 0;
+                if (string[0].equals("info")) {          //旅の情報
+                    journeyNames.add(string[1]);         //リストに表示するための名前
                     if(places != null) {
                         listPlaces.add(places);
                     }
                     places = new ArrayList<Place>();
-                } else {                            //それ以外は地点情報だと仮定して
-                    Place place = new Place(id,string[0]);
-                    if(string.length >= 2) {
-                        if (!string[1].isEmpty()) {
-                            place.setArrivalTime(string[1]);
-                        }
-                    }
+                    placeId = 0;
+                    journeyId++;
+                } else if(string[0].equals("place")) {  //地点情報
+                    Place place = new Place(placeId,string[1]);
                     if(string.length >= 3) {
                         if (!string[2].isEmpty()) {
-                            place.setDurationMinute(Integer.valueOf(string[2]));
+                            place.setArrivalTime(string[2]);
                         }
                     }
                     if(string.length >= 4) {
                         if (!string[3].isEmpty()) {
-                            place.setDepartureTime(string[3]);
+                            place.setDurationMinute(Integer.valueOf(string[3]));
+                        }
+                    }
+                    if(string.length >= 5) {
+                        if (!string[4].isEmpty()) {
+                            place.setDepartureTime(string[4]);
                         }
                     }
                     places.add(place);
-                    id++;
+                    placeId++;
                 }
-
             }
             listPlaces.add(places);
             bufferReader.close();
@@ -174,7 +189,42 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    Boolean saveJourneyList() {
+        try {
+            FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_PRIVATE);
+            //info,旅行名,旅行日時
+            for (int n = 0; n < listPlaces.size(); n++) {
+                outputStream.write(("info," + journeyNames.get(n) + "\n").getBytes());
+                for (int m = 0; m < listPlaces.get(n).size(); n++) {
+                    String string = "place," + listPlaces.get(n).get(m).getName();
+                    if(listPlaces.get(n).get(m).getArrivalTime() != null) {
+                        string += "," + listPlaces.get(n).get(m).getArrivalTime();
+                    } else {
+                        string += ",";
+                    }
+                    if(listPlaces.get(n).get(m).getDurationMinute() != null) {
+                        string += "," + listPlaces.get(n).get(m).getDurationMinute();
+                    } else {
+                        string += ",";
+                    }
+                    if(listPlaces.get(n).get(m).getDepartureTime() != null) {
+                        string += "," + listPlaces.get(n).get(m).getDepartureTime();
+                    } else {
+                        string += ",";
+                    }
+                    string += "\n";
+                    outputStream.write(string.getBytes());
+                }
+            }
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     private ArrayList<ArrayList<Place>> listPlaces = null;
+    ArrayList<String> journeyNames = null;
 
 //    public native String stringFromJNI();
 //
