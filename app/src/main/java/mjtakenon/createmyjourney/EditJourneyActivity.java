@@ -111,7 +111,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
                                 try {
-                                    FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_PRIVATE);
+                                    FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_APPEND);
                                     //info,旅行名,旅行日時
                                     outputStream.write(("info," + viewJourneyName.getText() + "\n").getBytes());
                                     while (it.hasNext()) {

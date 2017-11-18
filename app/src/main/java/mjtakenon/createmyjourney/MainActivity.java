@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             //info,旅行名,旅行日時
             for (int n = 0; n < listPlaces.size(); n++) {
                 outputStream.write(("info," + journeyNames.get(n) + "\n").getBytes());
-                for (int m = 0; m < listPlaces.get(n).size(); n++) {
+                for (int m = 0; m < listPlaces.get(n).size(); m++) {
                     String string = "place," + listPlaces.get(n).get(m).getName();
                     if(listPlaces.get(n).get(m).getArrivalTime() != null) {
                         string += "," + listPlaces.get(n).get(m).getArrivalTime();
