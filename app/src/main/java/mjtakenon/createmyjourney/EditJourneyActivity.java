@@ -1,6 +1,7 @@
 package mjtakenon.createmyjourney;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,14 +30,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.okhttp.Call;
@@ -121,28 +127,28 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         setPlaces(layoutPlan, mapTimeToPlace);
 
-        // findFragmentByIdでfragmentが取得できない(nullが帰ってくる)くて落ちる
-        SupportMapFragment mapFragment = new SupportMapFragment();
+        SupportMapFragment fragmentMap = new SupportMapFragment();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
-        ft.add(R.id.fragmentMapRoot, mapFragment, "mapFragment");
+        ft.add(R.id.fragmentMapRoot, fragmentMap, "fragmentMap");
         ft.commit();
-        mapFragment.getMapAsync(this);
+        fragmentMap.getMapAsync(this);
+
+        directionResponceJSON = null;
+        mapReady = false;
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(true);
-        googleMap.setIndoorEnabled(true);
+        googleMap.setIndoorEnabled(true);       // default
         googleMap.setBuildingsEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-
-
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mapReady = true;
+        //Directionが取得できているなら経路を表示
+        DrawDirections();
     }
 
     private void setPhotozouImageByWord(final Context context, final ImageView imageview, final String word) {
@@ -313,6 +319,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
     //Google Directionsを使って所要時間を取得、placesのtextにセット
     private void setTimeRequired(final Activity activity, final TreeMap<Integer, Place> places) {
+
         new AsyncTask<Void, Void, ArrayList<Integer>>() {
             String apiUrl;
             ProgressDialog progressDialog;
@@ -363,7 +370,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     }
                 }
 
-                //TODO プログレスダイヤログが生成できず落ちる
+                //TODO プログレスダイヤログが表示中にpauseすると落ちるらしい
                 progressDialog = new ProgressDialog(activity);
                 progressDialog.setMessage("検索中...");
                 progressDialog.show();
@@ -390,15 +397,17 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
                 try {
                     responseJSON = response.body().string();
-                    JSONObject jo = new JSONObject(responseJSON);
-                    if (!jo.getString("status").equals("OK")) {
+                    directionResponceJSON = new JSONObject(responseJSON);
+                    if (!directionResponceJSON.getString("status").equals("OK")) {
+                        directionResponceJSON = null;
                         return null;
                     }
                     //JSONから各移動時間を取得
                     for (int n = 0; n < places.size() - 1; n++) {
-                        Integer timeSec = jo.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
+                        Integer timeSec = directionResponceJSON.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
                         timeSecs.add(timeSec);
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
@@ -406,8 +415,13 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 return timeSecs;
             }
 
+            //TODO たまに所要時間が0にされるバグがある
             @Override
             protected void onPostExecute(ArrayList<Integer> timeSecs) {
+
+                if(timeSecs == null) {
+                    return;
+                }
 
                 Iterator<Integer> it = places.keySet().iterator();
                 Integer prevKey = null;
@@ -458,7 +472,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         places.get(key).setDepartureTime(newDepartureTime);
                     }
 
-
                     //textViewに表示するテキストを作成
                     String text = "";
                     // 出発地の場合
@@ -478,12 +491,16 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     prevKey = key;
                 }
 
+                //Mapが取得できていれば経路を表示
+                DrawDirections();
+
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
 
                 return;
             }
+
         }.execute();
         return;
     }
@@ -576,8 +593,80 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         setTimeRequired(EditJourneyActivity.this, places);
     }
 
+    //JSONからMapにDirectionを表示
+    private void DrawDirections() {
+        if(directionResponceJSON == null || !mapReady) {
+            return;
+        }
+
+        //JSONObjectから経路情報を分解する
+        //目的地と経由地のマーカー
+        ArrayList<LatLng> marker = new ArrayList<LatLng>();
+        //経路の直線群
+        PolylineOptions polylineOptions = new PolylineOptions();
+
+        LatLngBounds latLngBounds;
+
+        try {
+            //最初のルートを選択
+            JSONObject routeObject = directionResponceJSON.getJSONArray("routes").getJSONObject(0);
+            LatLng northeast = new LatLng(routeObject.getJSONObject("bounds").getJSONObject("northeast").getDouble("lat") , routeObject.getJSONObject("bounds").getJSONObject("northeast").getDouble("lng"));
+            LatLng southwest = new LatLng(routeObject.getJSONObject("bounds").getJSONObject("southwest").getDouble("lat") , routeObject.getJSONObject("bounds").getJSONObject("southwest").getDouble("lng"));
+            latLngBounds = new LatLngBounds(southwest,northeast);
+            //各目的地間のルート
+            for(int n = 0; n < routeObject.getJSONArray("legs").length(); n++) {
+                JSONObject placeDirectionObject = routeObject.getJSONArray("legs").getJSONObject(n);
+                LatLng latLngStart = new LatLng(
+                        placeDirectionObject.getJSONObject("start_location").getDouble("lat"),
+                        placeDirectionObject.getJSONObject("start_location").getDouble("lng"));
+                polylineOptions.add(latLngStart);
+                if(n == 0) {
+                    marker.add(latLngStart);
+                }
+                for(int m = 0; m < placeDirectionObject.getJSONArray("steps").length(); m++) {
+                    JSONObject passDirectionObject = placeDirectionObject.getJSONArray("steps").getJSONObject(m);
+                    polylineOptions.add(new LatLng(
+                            passDirectionObject.getJSONObject("start_location").getDouble("lat"),
+                            passDirectionObject.getJSONObject("start_location").getDouble("lng")));
+                    polylineOptions.add(new LatLng(
+                            passDirectionObject.getJSONObject("end_location").getDouble("lat"),
+                            passDirectionObject.getJSONObject("end_location").getDouble("lng")));
+                }
+                LatLng latLngEnd = new LatLng(
+                        placeDirectionObject.getJSONObject("end_location").getDouble("lat"),
+                        placeDirectionObject.getJSONObject("end_location").getDouble("lng"));
+                marker.add(latLngEnd);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        //線分集合を描画
+        polylineOptions.color(Color.RED);
+        googleMap.addPolyline(polylineOptions);
+
+        //マーカーを描画
+        Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
+        for(int n = 0; n < marker.size(); n++) {
+            Integer key = it.next();
+            //マーカーの座標を場所の座標に設定
+            mapTimeToPlace.get(key).setPosition(marker.get(n));
+            googleMap.addMarker(new MarkerOptions().position(marker.get(n)).title(mapTimeToPlace.get(key).getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
+        //カメラの中心は左上と右下の中心
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,25));
+    }
+
     final DateFormat dfTime = new SimpleDateFormat("HH:mm");
 
     private TreeMap<Integer, Place> mapTimeToPlace = new TreeMap<Integer, Place>();
 
+    private JSONObject directionResponceJSON;
+
+    private final String fragmentMapTag = "fragmentMap";
+
+    private Boolean mapReady = false;
+    private GoogleMap googleMap;
 }
