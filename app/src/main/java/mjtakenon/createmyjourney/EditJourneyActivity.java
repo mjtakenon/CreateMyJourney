@@ -99,21 +99,26 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 //                String journeyName = getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist");
                 final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
                 //旅の初期名は日付+目的地
-                if(getIntent().getExtras().getString("textDateBegin") != null && getIntent().getExtras().getString("textPlaceDist") != null) {
+                if (getIntent().getExtras().getString("mode").equals("add")) {
                     viewJourneyName.setText(getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist"));
-                } else {
+                } else if (getIntent().getExtras().getString("mode").equals("load")) {
                     viewJourneyName.setText(getIntent().getExtras().getString("journeyNames"));
                 }
                 //旅名を入れるダイアログ
-                //TODO 日付とか無理やり取って1行目に保存したい
                 new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
                         .setPositiveButton("決定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                //TODO 旅名にコンマを入れるとありえんバグる
+
                                 Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
                                 try {
                                     FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_APPEND);
                                     //info,旅行名,旅行日時
-                                    outputStream.write(("info," + viewJourneyName.getText() + "\n").getBytes());
+                                    if (getIntent().getExtras().getString("mode").equals("add")) {
+                                        outputStream.write(("info," + viewJourneyName.getText() + "," + getIntent().getExtras().getString("textDateBegin") + "\n").getBytes());
+                                    } else if (getIntent().getExtras().getString("mode").equals("load")) {
+                                        outputStream.write(("info," + viewJourneyName.getText() + "," + getIntent().getExtras().getString("dateBegin") + "\n").getBytes());
+                                    }
                                     while (it.hasNext()) {
                                         Integer key = it.next();
                                         //マーカーの座標を場所の座標に設定

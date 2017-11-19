@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putIntegerArrayList("durationMinute",listDurationMinute);
                 bundle.putStringArrayList("departureTime",listDepartureTime);
                 bundle.putString("journeyNames",journeyNames.get(position));
+                bundle.putString("dateBegin",dateBegin.get(position));
 
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
@@ -125,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //TODO Journey名が保存されねえな
     //csvから旅リスト読み込み
     Boolean loadJourneyList(ListView listJourney) {
         try {
@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             listPlaces = new ArrayList<ArrayList<Place>>();
             //旅の名前の配列
             journeyNames = new ArrayList<String>();
+            dateBegin = new ArrayList<String>();
             //1つの旅の経由地の配列
             ArrayList<Place> places = null;
             String line;
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 String[] string = line.split(",");
                 if (string[0].equals("info")) {          //旅の情報
                     journeyNames.add(string[1]);         //リストに表示するための名前
+                    dateBegin.add(string[2]);            //旅の出発日
                     if(places != null) {
                         listPlaces.add(places);
                     }
@@ -225,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<ArrayList<Place>> listPlaces = null;
     ArrayList<String> journeyNames = null;
+    ArrayList<String> dateBegin = null;
 
 //    public native String stringFromJNI();
 //
