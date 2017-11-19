@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_PRIVATE);
             //info,旅行名,旅行日時
             for (int n = 0; n < listPlaces.size(); n++) {
-                outputStream.write((COLUMN_INFO + "," + journeyNames.get(n) + "\n").getBytes());
+                outputStream.write((COLUMN_INFO + "," + journeyNames.get(n) + "," + dateBegin.get(n) + "\n").getBytes());
                 for (int m = 0; m < listPlaces.get(n).size(); m++) {
                     String string = COLUMN_PLACE +"," + listPlaces.get(n).get(m).getName();
                     if(listPlaces.get(n).get(m).getArrivalTime() != null) {
