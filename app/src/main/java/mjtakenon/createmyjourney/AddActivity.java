@@ -1,33 +1,18 @@
 package mjtakenon.createmyjourney;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+
+import static mjtakenon.createmyjourney.Const.*;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -51,7 +36,7 @@ public class AddActivity extends AppCompatActivity {
         ImageButton buttonTimeEnd = (ImageButton) findViewById(R.id.buttonTimeEnd);
         Button buttonSearch = (Button) findViewById(R.id.buttonSearch);
 
-        textDateBegin.setText(dfDate.format(dateTime));
+        textDateBegin.setText(FORMAT_DATE.format(new Date(System.currentTimeMillis())));
 //        textDateEnd.setText(dfDate.format(dateTime));
 
         textTimeBegin.setText("09:00");
@@ -90,6 +75,7 @@ public class AddActivity extends AppCompatActivity {
         });
 
         //TODO 決定押した後の硬直長すぎィ
+        //TODO 各フォームのバリデーション
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,37 +90,36 @@ public class AddActivity extends AppCompatActivity {
 
                 //入力終了、旅画面への移行
                 Bundle bundle = new Bundle();
-                bundle.putString("mode", "add");
-                bundle.putString("textDateBegin",textDateBegin.getText().toString());
-//                intent.putExtra("textDateEnd",textDateEnd.getText().toString());
-                bundle.putString("textTimeBegin",textTimeBegin.getText().toString());
-                bundle.putString("textTimeEnd",textTimeEnd.getText().toString());
-                bundle.putString("textPlaceBegin",textPlaceBegin.getText().toString());
-                bundle.putString("textPlaceEnd",textPlaceEnd.getText().toString());
-                bundle.putString("textPlaceDist",textPlaceDist.getText().toString());
+                bundle.putInt(MODE, MODE_ADD);
+                bundle.putString(DATE_BEGIN,textDateBegin.getText().toString());
+//                intent.putExtra(DATE_END,textDateEnd.getText().toString());
+                bundle.putString(TIME_BEGIN,textTimeBegin.getText().toString());
+                bundle.putString(TIME_END,textTimeEnd.getText().toString());
+                bundle.putString(PLACE_BEGIN,textPlaceBegin.getText().toString());
+                bundle.putString(PLACE_END,textPlaceEnd.getText().toString());
+                bundle.putString(PLACE_DIST,textPlaceDist.getText().toString());
 
+                //目的地にいる時間の計算
                 try {
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(dfTime.parse(textDurationDist.getText().toString()));
-                    bundle.putInt("intDurationDist",calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
+                    calendar.setTime(FORMAT_TIME.parse(textDurationDist.getText().toString()));
+                    bundle.putInt(TIME_DURATION,calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
                 } catch (ParseException e) {
-                    bundle.putInt("intDurationDist",0);
+                    bundle.putInt(TIME_DURATION,0);
                     e.printStackTrace();
+                    return;
                 }
 
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-                //?
+                //TODO キャンセルしたときにこの画面に戻ってくる必要があるか?仕様の検討
                 finish();
             }
         });
-
-
         //TODO GooglePlaceAPIのオートコンプリートを使いてえな
         //https://developers.google.com/places/android-api/?hl=ja
     }
-
 
     private void setDateByCalendar(EditText text) {
         DatePickerDialogFragment datePick = new DatePickerDialogFragment();
@@ -147,9 +132,5 @@ public class AddActivity extends AppCompatActivity {
         timePick.setEditText(text);
         timePick.show(getSupportFragmentManager(), "datePicker");
     }
-
-    final DateFormat dfDate = new SimpleDateFormat("yyyy/MM/dd");
-    final DateFormat dfTime = new SimpleDateFormat("HH:mm");
-    final Date dateTime = new Date(System.currentTimeMillis());
 }
 

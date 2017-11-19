@@ -84,6 +84,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import android.support.v4.app.FragmentActivity;
 
+import static mjtakenon.createmyjourney.Const.*;
+
 // 元はAppCompatActivityだったけどFragmentActivityに変えた
 public class EditJourneyActivity extends AppCompatActivity implements OnMapReadyCallback {
     @Override
@@ -96,34 +98,29 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                String journeyName = getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist");
                 final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
                 //旅の初期名は日付+目的地
-                if (getIntent().getExtras().getString("mode").equals("add")) {
-                    viewJourneyName.setText(getIntent().getExtras().getString("textDateBegin") + " " + getIntent().getExtras().getString("textPlaceDist"));
-                } else if (getIntent().getExtras().getString("mode").equals("load")) {
-                    viewJourneyName.setText(getIntent().getExtras().getString("journeyNames"));
+                if (getIntent().getExtras().getInt(MODE) == MODE_ADD) {
+                    viewJourneyName.setText(getIntent().getExtras().getString(DATE_BEGIN) + " " + getIntent().getExtras().getString(PLACE_DIST));
+                } else if (getIntent().getExtras().getInt(MODE) == MODE_LOAD) {
+                    viewJourneyName.setText(getIntent().getExtras().getString(JOURNEY_NAME));
                 }
                 //旅名を入れるダイアログ
                 new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
                         .setPositiveButton("決定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 //TODO 旅名にコンマを入れるとありえんバグる
-
                                 Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
                                 try {
-                                    FileOutputStream outputStream = openFileOutput("savedJourney.csv", Context.MODE_APPEND);
+                                    FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_APPEND);
                                     //info,旅行名,旅行日時
-                                    if (getIntent().getExtras().getString("mode").equals("add")) {
-                                        outputStream.write(("info," + viewJourneyName.getText() + "," + getIntent().getExtras().getString("textDateBegin") + "\n").getBytes());
-                                    } else if (getIntent().getExtras().getString("mode").equals("load")) {
-                                        outputStream.write(("info," + viewJourneyName.getText() + "," + getIntent().getExtras().getString("dateBegin") + "\n").getBytes());
-                                    }
+                                    outputStream.write((COLUMN_INFO + "," + viewJourneyName.getText() + "," + getIntent().getExtras().getString(DATE_BEGIN) + "\n").getBytes());
+
                                     while (it.hasNext()) {
                                         Integer key = it.next();
                                         //マーカーの座標を場所の座標に設定
                                         Place place = mapTimeToPlace.get(key);
-                                        String string = "place," + place.getName();
+                                        String string = COLUMN_PLACE + "," + place.getName();
                                         if(place.getArrivalTime() != null) {
                                             string += "," + place.getArrivalTime();
                                         } else {
@@ -183,27 +180,27 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         //TODO 読み込み画面からきてたらmapTimeToPlaceを読み込み、setPlacesを実行
         //もし作成画面からきてたら出発地、目的地、到着地を追加
         Bundle bundle = intent.getExtras();
-        if(bundle.getString("mode").equals("add")) {    //読み込み画面からきたFlagがいるか?
+        if(bundle.getInt(MODE) == MODE_ADD) {    //読み込み画面からきたFlagがいるか?
             mapTimeToPlace = new TreeMap<Integer, Place>();
-            if (bundle.getString("textPlaceBegin") != null) {
-                Place placeBegin = new Place(mapTimeToPlace.size(), bundle.getString("textPlaceBegin"), null, null, bundle.getString("textTimeBegin"));
+            if (bundle.getString(PLACE_BEGIN) != null) {
+                Place placeBegin = new Place(mapTimeToPlace.size(), bundle.getString(PLACE_BEGIN), null, null, bundle.getString(TIME_BEGIN));
                 mapTimeToPlace.put(placeBegin.getId(), placeBegin);
             }
-            if (bundle.getString("textPlaceDist") != null) {
-                Place placeDist = new Place(mapTimeToPlace.size(), bundle.getString("textPlaceDist"), null, intent.getIntExtra("intDurationDist", 0), null);
+            if (bundle.getString(PLACE_DIST) != null) {
+                Place placeDist = new Place(mapTimeToPlace.size(), bundle.getString(PLACE_DIST), null, intent.getIntExtra(TIME_DURATION, 0), null);
                 mapTimeToPlace.put(placeDist.getId(), placeDist);
             }
-            if (bundle.getString("textPlaceEnd") != null) {
-                Place placeEnd = new Place(mapTimeToPlace.size(), bundle.getString("textPlaceEnd"), bundle.getString("textTimeEnd"), null, null);
+            if (bundle.getString(PLACE_END) != null) {
+                Place placeEnd = new Place(mapTimeToPlace.size(), bundle.getString(PLACE_END), bundle.getString(TIME_END), null, null);
                 mapTimeToPlace.put(placeEnd.getId(), placeEnd);
             }
-        } else if (bundle.getString("mode").equals("load")) {
+        } else if (bundle.getInt(MODE) == MODE_LOAD) {
             mapTimeToPlace = new TreeMap<Integer, Place>();
-            ArrayList<Integer> listId = bundle.getIntegerArrayList("id");
-            ArrayList<String> listName = bundle.getStringArrayList("name");
-            ArrayList<String> listArrivalTime = bundle.getStringArrayList("arrivalTime");
-            ArrayList<Integer> listDurationMinute = bundle.getIntegerArrayList("durationMinute");
-            ArrayList<String> listDepartureTime = bundle.getStringArrayList("departureTime");
+            ArrayList<Integer> listId = bundle.getIntegerArrayList(PLACE_ID);
+            ArrayList<String> listName = bundle.getStringArrayList(PLACE_NAME);
+            ArrayList<String> listArrivalTime = bundle.getStringArrayList(TIME_ARRIVAL);
+            ArrayList<Integer> listDurationMinute = bundle.getIntegerArrayList(TIME_DURATION);
+            ArrayList<String> listDepartureTime = bundle.getStringArrayList(TIME_DEPARTURE);
             for(int n = 0; n < listId.size(); n++) {
                 Place place = new Place(listId.get(n),listName.get(n),listArrivalTime.get(n),listDurationMinute.get(n),listDepartureTime.get(n));
                 mapTimeToPlace.put(listId.get(n),place);
@@ -311,7 +308,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void setFlickrImageByWord(final Context context, final ImageView imageview, final String word) {
-        new AsyncTask<String, Void, String>() {
+        new AsyncTask<Void, Void, String>() {
 
             String encodedString;
             String apiUrl;
@@ -330,10 +327,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     return;
                 }
 
-                String flickrApikey = "54943877e5144fdb63a83366c3549bc5";
-
                 apiUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
-                        "&api_key=" + flickrApikey +
+                        "&api_key=" + KEY_FLICKR_API +
                         "&text=" + encodedString +
                         "&format=json&nojsoncallback=1" +
                         "&per_page=1" +
@@ -343,7 +338,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             }
 
             @Override
-            protected String doInBackground(String... params) {
+            protected String doInBackground(Void... params) {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(apiUrl).get().build();
                 Response response = null;
@@ -390,15 +385,12 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.displayImage(imageUrl, imageview);
                     imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    //Toast.makeText(context,imageUrl,Toast.LENGTH_LONG);
                 } else {
-                    //Toast.makeText(context,"ネットワーク接続がありません",Toast.LENGTH_SHORT);
                     imageview.setImageResource(R.drawable.error_small);
                     imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 }
-
             }
-        }.execute(word);
+        }.execute();
     }
 
     //Google Directionsを使って所要時間を取得、placesのtextにセット
@@ -437,11 +429,10 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 //apiUrl作成
-                String googleApikey = "AIzaSyDIoGExI7NPDFq6IJwVTDfyeDgca9q2OQQ";
                 apiUrl = "https://maps.googleapis.com/maps/api/directions/json?origin="
                         + encodedBeginPlace + "&destination="
                         + encodedEndPlace + "&key="
-                        + googleApikey + "&mode=driving";
+                        + KEY_GOOGLE_API + "&mode=driving";
 
                 //立ち寄りポイントの追加
                 if (encodedDistPlaces.size() >= 1) {
@@ -679,7 +670,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             Integer key = it.next();
             addPlaceRow(layout, places.get(key));
             if (it.hasNext()) {
-                addDetourButton(layout,places.get(key).getId()+AddButtonIdBegin);
+                addDetourButton(layout,places.get(key).getId()+ADD_BUTTON_ID_BEGIN);
             }
         }
         setTimeRequired(EditJourneyActivity.this, places);
@@ -757,10 +748,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
     private JSONObject directionResponceJSON;
 
-    private final String fragmentMapTag = "fragmentMap";
-
     private Boolean mapReady = false;
     private GoogleMap googleMap;
 
-    private final Integer AddButtonIdBegin = 50;
 }
