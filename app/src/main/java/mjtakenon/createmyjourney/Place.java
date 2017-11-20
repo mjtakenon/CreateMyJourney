@@ -20,6 +20,16 @@ public class Place {
     private LatLng  latLng;             //緯度経度
     private Integer type;               //場所の種類
 
+    public Place(Place place) {
+        this.id = place.getId();
+        this.type = place.getType();
+        this.name = place.getName();
+        this.arrivalTime = place.getArrivalTime();
+        this.durationMinute = place.getDurationMinute();
+        this.departureTime = place.getDepartureTime();
+        this.latLng = place.getLatLng();
+    }
+
     public Place(Integer id, String name) {
         this.id = id;
         this.type = null;
@@ -30,7 +40,7 @@ public class Place {
         this.latLng = null;
     }
 
-    public Place(Integer id, Integer type, String name) {
+    public Place(Integer id, String name, Integer type) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -40,7 +50,7 @@ public class Place {
         this.latLng = null;
     }
 
-    public Place(Integer id, Integer type, String name, String arrivalTime, Integer durationMinute, String departureTime) {
+    public Place(Integer id, String name, Integer type, String arrivalTime, Integer durationMinute, String departureTime) {
         this.id = id;
         this.type = type;
         this.name = name;

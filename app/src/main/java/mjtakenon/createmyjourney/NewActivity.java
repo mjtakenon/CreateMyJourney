@@ -14,12 +14,12 @@ import java.util.Date;
 
 import static mjtakenon.createmyjourney.Const.*;
 
-public class AddActivity extends AppCompatActivity {
+public class NewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
+        setContentView(R.layout.activity_new);
 
         EditText textDateBegin = (EditText) findViewById(R.id.textDateBegin);
         //TODO そもそも日帰りしか対応してない
@@ -90,7 +90,7 @@ public class AddActivity extends AppCompatActivity {
 
                 //入力終了、旅画面への移行
                 Bundle bundle = new Bundle();
-                bundle.putInt(MODE, MODE_ADD);
+                bundle.putInt(MODE, MODE_NEW);
                 bundle.putString(DATE_BEGIN,textDateBegin.getText().toString());
 //                intent.putExtra(DATE_END,textDateEnd.getText().toString());
                 bundle.putString(TIME_BEGIN,textTimeBegin.getText().toString());

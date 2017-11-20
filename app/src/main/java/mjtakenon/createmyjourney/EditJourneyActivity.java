@@ -103,7 +103,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View view) {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
-                loadPlaces();
+                //loadPlaces();
                 setPlaces(layoutPlan);
             }
         });
@@ -156,15 +156,15 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         Bundle bundle = getIntent().getExtras();
         if(bundle.getInt(MODE) == MODE_NEW) {
             if (bundle.getString(PLACE_BEGIN) != null) {
-                Place placeBegin = new Place(listPlaces.size(), Place.TYPE_BEGIN, bundle.getString(PLACE_BEGIN), null, null, bundle.getString(TIME_BEGIN));
+                Place placeBegin = new Place(listPlaces.size(), bundle.getString(PLACE_BEGIN), Place.TYPE_BEGIN, null, null, bundle.getString(TIME_BEGIN));
                 listPlaces.add(placeBegin);
             }
             if (bundle.getString(PLACE_DIST) != null) {
-                Place placeDist = new Place(listPlaces.size(), Place.TYPE_DIST, bundle.getString(PLACE_DIST), null, bundle.getInt(TIME_DURATION, 0), null);
+                Place placeDist = new Place(listPlaces.size(), bundle.getString(PLACE_DIST), Place.TYPE_DIST, null, bundle.getInt(TIME_DURATION, 0), null);
                 listPlaces.add(placeDist);
             }
             if (bundle.getString(PLACE_END) != null) {
-                Place placeEnd = new Place(listPlaces.size(), Place.TYPE_END, bundle.getString(PLACE_END), bundle.getString(TIME_END), null, null);
+                Place placeEnd = new Place(listPlaces.size(), bundle.getString(PLACE_END), Place.TYPE_END, bundle.getString(TIME_END), null, null);
                 listPlaces.add(placeEnd);
             }
         } else if (bundle.getInt(MODE) == MODE_LOAD) {
@@ -176,11 +176,11 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             for (int n = 0; n < listId.size(); n++) {
                 Place place;
                 if (n == 0) {
-                    place = new Place(listId.get(n), Place.TYPE_BEGIN, listName.get(n), listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
+                    place = new Place(listId.get(n), listName.get(n), Place.TYPE_BEGIN, listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
                 } else if (n == listId.size()-1) {
-                    place = new Place(listId.get(n), Place.TYPE_END, listName.get(n), listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
+                    place = new Place(listId.get(n), listName.get(n), Place.TYPE_END, listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
                 } else {
-                    place = new Place(listId.get(n), Place.TYPE_DIST, listName.get(n), listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
+                    place = new Place(listId.get(n), listName.get(n), Place.TYPE_DIST, listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
                 }
                 listPlaces.add(place);
             }
@@ -404,8 +404,12 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
                 for (int n = 0; n < encodedDistPlaces.size(); n++) {
                     apiUrl += encodedDistPlaces.get(n);
-                    if (n + 1 < encodedDistPlaces.size()) {
-                        apiUrl += "|";
+                    if (n < encodedDistPlaces.size()-1) {
+                        try {
+                            apiUrl += (URLEncoder.encode("|", "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -457,23 +461,34 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             protected void onPostExecute(ArrayList<Integer> timeSecs) {
 
                 if(timeSecs == null) {
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+
+                    for (int n = 0; n < listPlaces.size(); n++) {
+                        TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
+                        textView.setText("取得失敗");
+                    }
                     return;
                 }
 
                 for (int n = 0; n < listPlaces.size(); n++) {
-                    Date dateBegin = null;
+                    Date dateBegin;
                     TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
 
                     //移動時間を計算
                     try {
-                        if (listPlaces.get(n).getType() == Place.TYPE_BEGIN) { //出発地だった場合
+                        if (listPlaces.get(n).getType().equals(Place.TYPE_BEGIN)) { //出発地だった場合
                             dateBegin = FORMAT_TIME.parse(listPlaces.get(n).getDepartureTime());
                         } else {     //それ以外は前の場所の出発時刻を取得
                             dateBegin = FORMAT_TIME.parse(listPlaces.get(n-1).getDepartureTime());
                         }
                     } catch (ParseException e) {
-                        textView.setText("取得失敗");
                         e.printStackTrace();
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        textView.setText("取得失敗");
                         continue;
                     }
 
@@ -484,16 +499,16 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     String text = "";
                     // 各Placeの時間を計算
                     // 同時にtextViewに表示するテキストを作成
-                    if(listPlaces.get(n).getType() == Place.TYPE_BEGIN) {
+                    if(listPlaces.get(n).getType().equals(Place.TYPE_BEGIN)) {
                         listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
                         text = listPlaces.get(n).getDepartureTime() + "発";
-                    } else if (listPlaces.get(n).getType() == Place.TYPE_DIST) {
+                    } else if (listPlaces.get(n).getType().equals(Place.TYPE_DIST)) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
                         listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
                         calendar.add(Calendar.MINUTE, listPlaces.get(n).getDurationMinute());
                         listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
                         text = listPlaces.get(n).getArrivalTime() + "着\n" + listPlaces.get(n).getDurationMinute() + "分滞在\n" + listPlaces.get(n).getDepartureTime() + "発";
-                    } else if (listPlaces.get(n).getType() == Place.TYPE_END) {
+                    } else if (listPlaces.get(n).getType().equals(Place.TYPE_END)) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
                         listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
                         text = listPlaces.get(n).getArrivalTime() + "着";
@@ -585,15 +600,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         ImageButton buttonAddDetour = new ImageButton(this);
         buttonAddDetour.setImageResource(R.drawable.plus_black_small);
         buttonAddDetour.setId(id);
-        buttonAddDetour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO 経由地追加のウィンドウ開いて戻して
-                int id = v.getId();
-                Toast.makeText(EditJourneyActivity.this,String.valueOf(id),Toast.LENGTH_LONG);
-            }
-        });
-
+        buttonAddDetour.setOnClickListener(new AddButtonOnClickListener());
         layout.addView(buttonAddDetour, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
@@ -699,6 +706,33 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             return false;
         }
         return true;
+    }
+
+    private class AddButtonOnClickListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v) {
+            //TODO 経由地追加のウィンドウ開いて戻して
+            int newId = v.getId()+1-ADDBUTTON_ID_BEGIN;
+            //Toast.makeText(EditJourneyActivity.this,String.valueOf(id),Toast.LENGTH_LONG);
+            //Idは挿入する位置
+
+
+            Place place = new Place(newId,"はままつフラワーパーク",Place.TYPE_DIST,null,60,null);
+            insertPlace(place);
+        }
+    }
+
+    private void insertPlace(Place place) {
+        int insertPosition = place.getId();
+        for(int n = insertPosition; n < listPlaces.size(); n++) {
+            listPlaces.get(n).setId(n+1);
+        }
+        listPlaces.add(insertPosition,place);
+
+        LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
+        layoutPlan.removeAllViews();
+        setPlaces(layoutPlan);
     }
 
 
