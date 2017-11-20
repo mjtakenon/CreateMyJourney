@@ -71,7 +71,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         Button buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
                 //旅の初期名は日付+目的地
                 if (getIntent().getExtras().getInt(MODE) == MODE_ADD) {
@@ -83,39 +83,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
                         .setPositiveButton("決定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                //TODO 旅名にコンマを入れるとありえんバグる
-                                Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
-                                try {
-                                    FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_APPEND);
-                                    //info,旅行名,旅行日時
-                                    outputStream.write((COLUMN_INFO + "," + viewJourneyName.getText() + "," + getIntent().getExtras().getString(DATE_BEGIN) + "\n").getBytes());
-
-                                    while (it.hasNext()) {
-                                        Integer key = it.next();
-                                        //マーカーの座標を場所の座標に設定
-                                        Place place = mapTimeToPlace.get(key);
-                                        String string = COLUMN_PLACE + "," + place.getName();
-                                        if(place.getArrivalTime() != null) {
-                                            string += "," + place.getArrivalTime();
-                                        } else {
-                                            string += ",";
-                                        }
-                                        if(place.getDurationMinute() != null) {
-                                            string += "," + place.getDurationMinute();
-                                        } else {
-                                            string += ",";
-                                        }
-                                        if(place.getDepartureTime() != null) {
-                                            string += "," + place.getDepartureTime();
-                                        } else {
-                                            string += ",";
-                                        }
-                                        string += "\n";
-                                        outputStream.write(string.getBytes());
-                                    }
-                                    outputStream.close();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                if(!saveJourney(viewJourneyName.getText().toString())) {
+                                    //TODO Toastが表示されない
                                     return;
                                 }
                                 finish();
@@ -126,6 +95,9 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                             }
                         })
                         .show();
+
+                Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT);
+
             }
         });
 
@@ -136,52 +108,13 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View view) {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
-                setPlaces(layoutPlan, mapTimeToPlace);
+                loadPlaces();
+                setPlaces(layoutPlan);
             }
         });
 
-        Intent intent = this.getIntent();
-
         //タイムラインは時刻を左、場所画像と場所を右にセットで積んでく
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
-
-        //Intentなしで起動した場合
-        if(intent == null) {
-            finish();
-            return;
-        }
-
-        //TODO 読み込み画面からきてたらmapTimeToPlaceを読み込み、setPlacesを実行
-        //もし作成画面からきてたら出発地、目的地、到着地を追加
-        Bundle bundle = intent.getExtras();
-        if(bundle.getInt(MODE) == MODE_ADD) {    //読み込み画面からきたFlagがいるか?
-            mapTimeToPlace = new TreeMap<Integer, Place>();
-            if (bundle.getString(PLACE_BEGIN) != null) {
-                Place placeBegin = new Place(mapTimeToPlace.size(), bundle.getString(PLACE_BEGIN), null, null, bundle.getString(TIME_BEGIN));
-                mapTimeToPlace.put(placeBegin.getId(), placeBegin);
-            }
-            if (bundle.getString(PLACE_DIST) != null) {
-                Place placeDist = new Place(mapTimeToPlace.size(), bundle.getString(PLACE_DIST), null, intent.getIntExtra(TIME_DURATION, 0), null);
-                mapTimeToPlace.put(placeDist.getId(), placeDist);
-            }
-            if (bundle.getString(PLACE_END) != null) {
-                Place placeEnd = new Place(mapTimeToPlace.size(), bundle.getString(PLACE_END), bundle.getString(TIME_END), null, null);
-                mapTimeToPlace.put(placeEnd.getId(), placeEnd);
-            }
-        } else if (bundle.getInt(MODE) == MODE_LOAD) {
-            mapTimeToPlace = new TreeMap<Integer, Place>();
-            ArrayList<Integer> listId = bundle.getIntegerArrayList(PLACE_ID);
-            ArrayList<String> listName = bundle.getStringArrayList(PLACE_NAME);
-            ArrayList<String> listArrivalTime = bundle.getStringArrayList(TIME_ARRIVAL);
-            ArrayList<Integer> listDurationMinute = bundle.getIntegerArrayList(TIME_DURATION);
-            ArrayList<String> listDepartureTime = bundle.getStringArrayList(TIME_DEPARTURE);
-            for(int n = 0; n < listId.size(); n++) {
-                Place place = new Place(listId.get(n),listName.get(n),listArrivalTime.get(n),listDurationMinute.get(n),listDepartureTime.get(n));
-                mapTimeToPlace.put(listId.get(n),place);
-            }
-        }
-
-        setPlaces(layoutPlan, mapTimeToPlace);
 
         SupportMapFragment fragmentMap = new SupportMapFragment();
         FragmentManager manager = getSupportFragmentManager();
@@ -192,6 +125,9 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         directionResponceJSON = null;
         mapReady = false;
+
+        loadPlaces();
+        setPlaces(layoutPlan);
     }
 
     @Override
@@ -205,6 +141,55 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         mapReady = true;
         //Directionが取得できているなら経路を表示
         DrawDirections();
+    }
+
+    // Intentから読み込み
+    private void loadPlaces() {
+        //もし作成画面からきてたら出発地、目的地、到着地を追加
+        this.listPlaces.clear();
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getInt(MODE) == MODE_ADD) {    //読み込み画面からきたFlagがいるか?
+            if (bundle.getString(PLACE_BEGIN) != null) {
+                Place placeBegin = new Place(listPlaces.size(), Place.TYPE_BEGIN, bundle.getString(PLACE_BEGIN), null, null, bundle.getString(TIME_BEGIN));
+                listPlaces.add(placeBegin);
+            }
+            if (bundle.getString(PLACE_DIST) != null) {
+                Place placeDist = new Place(listPlaces.size(), Place.TYPE_DIST, bundle.getString(PLACE_DIST), null, bundle.getInt(TIME_DURATION, 0), null);
+                listPlaces.add(placeDist);
+            }
+            if (bundle.getString(PLACE_END) != null) {
+                Place placeEnd = new Place(listPlaces.size(), Place.TYPE_END, bundle.getString(PLACE_END), bundle.getString(TIME_END), null, null);
+                listPlaces.add(placeEnd);
+            }
+        } else if (bundle.getInt(MODE) == MODE_LOAD) {
+            ArrayList<Integer> listId = bundle.getIntegerArrayList(PLACE_ID);
+            ArrayList<String> listName = bundle.getStringArrayList(PLACE_NAME);
+            ArrayList<String> listArrivalTime = bundle.getStringArrayList(TIME_ARRIVAL);
+            ArrayList<Integer> listDurationMinute = bundle.getIntegerArrayList(TIME_DURATION);
+            ArrayList<String> listDepartureTime = bundle.getStringArrayList(TIME_DEPARTURE);
+            for (int n = 0; n < listId.size(); n++) {
+                Place place;
+                if (n == 0) {
+                    place = new Place(listId.get(n), Place.TYPE_BEGIN, listName.get(n), listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
+                } else if (n == listId.size()-1) {
+                    place = new Place(listId.get(n), Place.TYPE_END, listName.get(n), listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
+                } else {
+                    place = new Place(listId.get(n), Place.TYPE_DIST, listName.get(n), listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
+                }
+                listPlaces.add(place);
+            }
+        }
+    }
+
+    //場所と追加用ボタンを交互に配置
+    private void setPlaces(LinearLayout layout) {
+        for(int n = 0; n < listPlaces.size(); n++) {
+            addPlaceRow(layout, listPlaces.get(n));
+            if (n + 1 < listPlaces.size()) {
+                addDetourButton(layout,listPlaces.get(n).getAddButtonId());
+            }
+        }
+        setTimeRequired();
     }
 
     private void setPhotozouImageByWord(final Context context, final ImageView imageview, final String word) {
@@ -262,6 +247,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
             @Override
             protected void onProgressUpdate(Void... params) {
+
             }
 
             @Override
@@ -368,7 +354,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     }
 
     //Google Directionsを使って所要時間を取得、placesのtextにセット
-    private void setTimeRequired(final Activity activity, final TreeMap<Integer, Place> places) {
+    private void setTimeRequired() {
 
         new AsyncTask<Void, Void, ArrayList<Integer>>() {
             String apiUrl;
@@ -377,24 +363,21 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
             @Override
             protected void onPreExecute() {
-                ArrayList<Place> placesList = new ArrayList<Place>();
-
-                Iterator<Integer> it = places.keySet().iterator();
-                while (it.hasNext()) {
-                    Integer key = it.next();
-                    placesList.add(places.get(key));
-                }
 
                 String encodedBeginPlace;       //最初の場所名
                 String encodedEndPlace;         //最後の場所名
                 ArrayList<String> encodedDistPlaces = new ArrayList<String>();
 
-                //placesが2以上じゃないと死ぬ
+                //placesが2以上じゃないと算出不可
+                if(listPlaces.size() < 2) {
+                    return;
+                }
+
                 try {
-                    encodedBeginPlace = URLEncoder.encode(placesList.get(0).getName(), "UTF-8");
-                    encodedEndPlace = URLEncoder.encode(placesList.get(placesList.size() - 1).getName(), "UTF-8");
-                    for (int n = 1; n < placesList.size() - 1; n++) {
-                        encodedDistPlaces.add(URLEncoder.encode(placesList.get(n).getName(), "UTF-8"));
+                    encodedBeginPlace = URLEncoder.encode(listPlaces.get(0).getName(), "UTF-8");
+                    encodedEndPlace = URLEncoder.encode(listPlaces.get(listPlaces.size() - 1).getName(), "UTF-8");
+                    for (int n = 1; n < listPlaces.size() - 1; n++) {
+                        encodedDistPlaces.add(URLEncoder.encode(listPlaces.get(n).getName(), "UTF-8"));
                     }
                 } catch (UnsupportedEncodingException e) {
                     encodedBeginPlace = " ";
@@ -452,7 +435,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         return null;
                     }
                     //JSONから各移動時間を取得
-                    for (int n = 0; n < places.size() - 1; n++) {
+                    for (int n = 0; n < listPlaces.size() - 1; n++) {
                         Integer timeSec = directionResponceJSON.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
                         timeSecs.add(timeSec);
                     }
@@ -472,21 +455,17 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     return;
                 }
 
-                Iterator<Integer> it = places.keySet().iterator();
-                Integer prevKey = null;
-
-                for (int n = 0; n < places.size(); n++) {
-                    Integer key = it.next();
+                for (int n = 0; n < listPlaces.size(); n++) {
 
                     Date dateBegin = null;
-                    TextView textView = (TextView) findViewById(places.get(key).getId());
+                    TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
 
                     //移動時間を計算
                     try {
-                        if (prevKey != null) { //前の場所の出発時刻
-                            dateBegin = dfTime.parse(places.get(prevKey).getDepartureTime());
-                        } else {               //出発地だった場合
-                            dateBegin = dfTime.parse(places.get(key).getDepartureTime());
+                        if (listPlaces.get(n).getType() == Place.TYPE_BEGIN) { //出発地だった場合
+                            dateBegin = FORMAT_TIME.parse(listPlaces.get(n).getDepartureTime());
+                        } else {     //それ以外は前の場所の出発時刻を取得
+                            dateBegin = FORMAT_TIME.parse(listPlaces.get(n-1).getDepartureTime());
                         }
                     } catch (ParseException e) {
                         textView.setText("取得失敗");
@@ -498,46 +477,28 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(dateBegin);
 
-                    // 出発地以外移動時間を加算し到着時刻を計算
-                    if (places.get(key).getDepartureTime() == null) {
+                    if(listPlaces.get(n).getType() == Place.TYPE_BEGIN) {
+                        listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
+                    } else if (listPlaces.get(n).getType() == Place.TYPE_DIST) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
-                        //ArrivalTimeを算出
-                        String newArrivalTime = dfTime.format(calendar.getTime());
-                        places.get(key).setArrivalTime(newArrivalTime);
-                    }
-
-                    // 経由地の場合のみ滞在時間を取得
-                    if (places.get(key).getDurationMinute() != null) {
-                        calendar.add(Calendar.MINUTE, places.get(key).getDurationMinute());
-                        String newDepartureTime = dfTime.format(calendar.getTime());
-                        places.get(key).setDepartureTime(newDepartureTime);
-                        //newDurationMinute = places.get(key).getDurationMinute();
-                    }
-                    //places.get(key).setDurationMinute(newDurationMinute);
-
-                    // 到着地の場合以外出発時刻を計算
-                    if (places.get(key).getArrivalTime() == null) {
-                        String newDepartureTime = dfTime.format(calendar.getTime());
-                        places.get(key).setDepartureTime(newDepartureTime);
+                        listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
+                        calendar.add(Calendar.MINUTE, listPlaces.get(n).getDurationMinute());
+                        listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
+                    } else if (listPlaces.get(n).getType() == Place.TYPE_END) {
+                        calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
+                        listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
                     }
 
                     //textViewに表示するテキストを作成
                     String text = "";
-                    // 出発地の場合
-                    if (places.get(key).getDepartureTime() != null && places.get(key).getDurationMinute() == null) {
-                        text = places.get(key).getDepartureTime() + "発";
-                    }
-                    // 経由地の場合
-                    if (places.get(key).getDurationMinute() != null) {
-                        text = places.get(key).getArrivalTime() + "着\n" + places.get(key).getDurationMinute() + "分滞在\n" + places.get(key).getDepartureTime() + "発";
-                    }
-                    // 到着地の場合以外出発時刻を計算
-                    if (places.get(key).getArrivalTime() != null && places.get(key).getDurationMinute() == null) {
-                        text = places.get(key).getArrivalTime() + "着";
+                    if (listPlaces.get(n).getType() == Place.TYPE_BEGIN) {
+                        text = listPlaces.get(n).getDepartureTime() + "発";
+                    } else if (listPlaces.get(n).getType() == Place.TYPE_DIST) {
+                        text = listPlaces.get(n).getArrivalTime() + "着\n" + listPlaces.get(n).getDurationMinute() + "分滞在\n" + listPlaces.get(n).getDepartureTime() + "発";
+                    } else if (listPlaces.get(n).getType() == Place.TYPE_END) {
+                        text = listPlaces.get(n).getArrivalTime() + "着";
                     }
                     textView.setText(text);
-
-                    prevKey = key;
                 }
 
                 //Mapが取得できていれば経路を表示
@@ -584,7 +545,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         TextView textTime = new TextView(this);
 
         textTime.setText("検索中...");
-        textTime.setId(place.getId());
+        textTime.setId(place.getTextViewId());
         textTime.setPadding(0, 0, 20, 0);
 
         //レイアウトを取得
@@ -631,24 +592,13 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View v) {
                 //TODO 経由地追加のウィンドウ開いて戻して
                 int id = v.getId();
+                Toast.makeText(EditJourneyActivity.this,String.valueOf(id),Toast.LENGTH_LONG);
             }
         });
 
         layout.addView(buttonAddDetour, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
-    //場所と追加用ボタンを交互に配置
-    private void setPlaces(LinearLayout layout, TreeMap<Integer, Place> places) {
-        Iterator<Integer> it = places.keySet().iterator();
-        while (it.hasNext()) {
-            Integer key = it.next();
-            addPlaceRow(layout, places.get(key));
-            if (it.hasNext()) {
-                addDetourButton(layout,places.get(key).getId()+ADD_BUTTON_ID_BEGIN);
-            }
-        }
-        setTimeRequired(EditJourneyActivity.this, places);
-    }
 
     //JSONからMapにDirectionを表示
     private void DrawDirections() {
@@ -705,20 +655,56 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         googleMap.addPolyline(polylineOptions);
 
         //マーカーを描画
-        Iterator<Integer> it = mapTimeToPlace.keySet().iterator();
-        for(int n = 0; n < marker.size(); n++) {
-            Integer key = it.next();
+        for(int n = 0; n < listPlaces.size(); n++) {
             //マーカーの座標を場所の座標に設定
-            mapTimeToPlace.get(key).setPosition(marker.get(n));
-            googleMap.addMarker(new MarkerOptions().position(marker.get(n)).title(mapTimeToPlace.get(key).getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            listPlaces.get(n).setLatLng(marker.get(n));
+            googleMap.addMarker(new MarkerOptions().position(marker.get(n)).title(listPlaces.get(n).getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         }
-        //カメラの中心は左上と右下の中心
+        //カメラの中心は左上と右下の中心、左右に25ピクセルのマージンつけて
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,25));
     }
 
-    final DateFormat dfTime = new SimpleDateFormat("HH:mm");
+    private Boolean saveJourney(String journeyName) {
+        if(journeyName.contains(",")) {
+            return false;
+        }
+        try {
+            FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_APPEND);
+            //info,旅行名,旅行日時
+            outputStream.write((COLUMN_INFO + "," + journeyName + "," + getIntent().getExtras().getString(DATE_BEGIN) + "\n").getBytes());
 
-    private TreeMap<Integer, Place> mapTimeToPlace = null;
+            for(int n = 0; n < listPlaces.size(); n++) {
+                //マーカーの座標を場所の座標に設定
+                Place place = listPlaces.get(n);
+                String string = COLUMN_PLACE + "," + place.getName();
+                if(place.getArrivalTime() != null) {
+                    string += "," + place.getArrivalTime();
+                } else {
+                    string += ",";
+                }
+                if(place.getDurationMinute() != null) {
+                    string += "," + place.getDurationMinute();
+                } else {
+                    string += ",";
+                }
+                if(place.getDepartureTime() != null) {
+                    string += "," + place.getDepartureTime();
+                } else {
+                    string += ",";
+                }
+                string += "\n";
+                outputStream.write(string.getBytes());
+            }
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+    private ArrayList<Place> listPlaces = new ArrayList<Place>();
 
     private JSONObject directionResponceJSON;
 

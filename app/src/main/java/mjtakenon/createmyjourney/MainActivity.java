@@ -137,6 +137,15 @@ public class MainActivity extends AppCompatActivity {
                     journeyNames.add(string[1]);         //リストに表示するための名前
                     dateBegin.add(string[2]);            //旅の出発日
                     if(places != null) {
+                        for(int n = 0; n < places.size(); n++) {
+                            if(n == 0) {
+                                places.get(n).setType(Place.TYPE_BEGIN);
+                            } else if (n == places.size()-1) {
+                                places.get(n).setType(Place.TYPE_END);
+                            } else {
+                                places.get(n).setType(Place.TYPE_DIST);
+                            }
+                        }
                         listPlaces.add(places);
                     }
                     places = new ArrayList<Place>();
@@ -163,6 +172,15 @@ public class MainActivity extends AppCompatActivity {
                     placeId++;
                 }
             }
+            for(int n = 0; n < places.size(); n++) {
+                if(n == 0) {
+                    places.get(n).setType(Place.TYPE_BEGIN);
+                } else if (n == places.size()-1) {
+                    places.get(n).setType(Place.TYPE_END);
+                } else {
+                    places.get(n).setType(Place.TYPE_DIST);
+                }
+            }
             listPlaces.add(places);
             bufferReader.close();
         } catch (Exception e) {
@@ -187,17 +205,17 @@ public class MainActivity extends AppCompatActivity {
                 outputStream.write((COLUMN_INFO + "," + journeyNames.get(n) + "," + dateBegin.get(n) + "\n").getBytes());
                 for (int m = 0; m < listPlaces.get(n).size(); m++) {
                     String string = COLUMN_PLACE +"," + listPlaces.get(n).get(m).getName();
-                    if(listPlaces.get(n).get(m).getArrivalTime() != null) {
+                    if(listPlaces.get(n).get(m).getType() != Place.TYPE_BEGIN) {
                         string += "," + listPlaces.get(n).get(m).getArrivalTime();
                     } else {
                         string += ",";
                     }
-                    if(listPlaces.get(n).get(m).getDurationMinute() != null) {
+                    if(listPlaces.get(n).get(m).getType() == Place.TYPE_DIST) {
                         string += "," + listPlaces.get(n).get(m).getDurationMinute();
                     } else {
                         string += ",";
                     }
-                    if(listPlaces.get(n).get(m).getDepartureTime() != null) {
+                    if(listPlaces.get(n).get(m).getType() != Place.TYPE_END) {
                         string += "," + listPlaces.get(n).get(m).getDepartureTime();
                     } else {
                         string += ",";

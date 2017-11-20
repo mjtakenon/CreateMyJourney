@@ -40,6 +40,7 @@ public class Const {
     static final String KEY_FLICKR_API = "54943877e5144fdb63a83366c3549bc5";
     static final String KEY_GOOGLE_API = "AIzaSyDIoGExI7NPDFq6IJwVTDfyeDgca9q2OQQ";
 
-
-    static final Integer ADD_BUTTON_ID_BEGIN = 50;
+    /* IDの開始番号 */
+    static final Integer ADDBUTTON_ID_BEGIN = 100;
+    static final Integer TEXTVIEW_ID_BEGIN = 200;
 }
