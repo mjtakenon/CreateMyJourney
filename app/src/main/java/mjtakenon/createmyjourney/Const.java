@@ -12,8 +12,9 @@ public class Const {
 
     /* Bundle受け渡し用変数 */
     static final String  MODE =         "MODE";
-    static final Integer MODE_ADD =     0;
+    static final Integer MODE_NEW =     0;
     static final Integer MODE_LOAD =    1;
+    static final Integer MODE_ADD =     2;
 
     /* Bundle ADD用 */
     static final String  TIME_BEGIN =       "TIME_BEGIN";

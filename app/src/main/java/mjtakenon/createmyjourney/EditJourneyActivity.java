@@ -71,7 +71,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             public void onClick(final View view) {
                 final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
                 //旅の初期名は日付+目的地
-                if (getIntent().getExtras().getInt(MODE) == MODE_ADD) {
+                if (getIntent().getExtras().getInt(MODE) == MODE_NEW) {
                     viewJourneyName.setText(getIntent().getExtras().getString(DATE_BEGIN) + " " + getIntent().getExtras().getString(PLACE_DIST));
                 } else if (getIntent().getExtras().getInt(MODE) == MODE_LOAD) {
                     viewJourneyName.setText(getIntent().getExtras().getString(JOURNEY_NAME));
@@ -82,6 +82,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if(!saveJourney(viewJourneyName.getText().toString())) {
                                     //TODO Toastが表示されない
+                                    Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT);
                                     return;
                                 }
                                 finish();
@@ -92,8 +93,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                             }
                         })
                         .show();
-
-                Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT);
             }
         });
 
@@ -139,12 +138,23 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         DrawDirections();
     }
 
+    // 画面に戻ってきたとき
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
+        layoutPlan.removeAllViews();
+        loadPlaces();
+        setPlaces(layoutPlan);
+    }
+
     // Intentから読み込み
     private void loadPlaces() {
         //もし作成画面からきてたら出発地、目的地、到着地を追加
         this.listPlaces.clear();
         Bundle bundle = getIntent().getExtras();
-        if(bundle.getInt(MODE) == MODE_ADD) {    //読み込み画面からきたFlagがいるか?
+        if(bundle.getInt(MODE) == MODE_NEW) {
             if (bundle.getString(PLACE_BEGIN) != null) {
                 Place placeBegin = new Place(listPlaces.size(), Place.TYPE_BEGIN, bundle.getString(PLACE_BEGIN), null, null, bundle.getString(TIME_BEGIN));
                 listPlaces.add(placeBegin);
