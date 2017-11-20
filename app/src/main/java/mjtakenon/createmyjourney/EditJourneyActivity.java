@@ -1,12 +1,10 @@
 package mjtakenon.createmyjourney;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -26,6 +24,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,7 +34,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -48,15 +49,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
 
 import static mjtakenon.createmyjourney.Const.*;
 
@@ -97,7 +94,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         .show();
 
                 Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT);
-
             }
         });
 
@@ -395,6 +391,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 if (encodedDistPlaces.size() >= 1) {
                     apiUrl += "&waypoints=";
                 }
+
                 for (int n = 0; n < encodedDistPlaces.size(); n++) {
                     apiUrl += encodedDistPlaces.get(n);
                     if (n + 1 < encodedDistPlaces.size()) {
@@ -439,7 +436,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         Integer timeSec = directionResponceJSON.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
                         timeSecs.add(timeSec);
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
@@ -447,7 +443,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 return timeSecs;
             }
 
-            //TODO たまに所要時間が0にされるバグがある
             @Override
             protected void onPostExecute(ArrayList<Integer> timeSecs) {
 
@@ -456,7 +451,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 for (int n = 0; n < listPlaces.size(); n++) {
-
                     Date dateBegin = null;
                     TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
 
@@ -477,25 +471,21 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(dateBegin);
 
+                    String text = "";
+                    // 各Placeの時間を計算
+                    // 同時にtextViewに表示するテキストを作成
                     if(listPlaces.get(n).getType() == Place.TYPE_BEGIN) {
                         listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = listPlaces.get(n).getDepartureTime() + "発";
                     } else if (listPlaces.get(n).getType() == Place.TYPE_DIST) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
                         listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
                         calendar.add(Calendar.MINUTE, listPlaces.get(n).getDurationMinute());
                         listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = listPlaces.get(n).getArrivalTime() + "着\n" + listPlaces.get(n).getDurationMinute() + "分滞在\n" + listPlaces.get(n).getDepartureTime() + "発";
                     } else if (listPlaces.get(n).getType() == Place.TYPE_END) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
                         listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
-                    }
-
-                    //textViewに表示するテキストを作成
-                    String text = "";
-                    if (listPlaces.get(n).getType() == Place.TYPE_BEGIN) {
-                        text = listPlaces.get(n).getDepartureTime() + "発";
-                    } else if (listPlaces.get(n).getType() == Place.TYPE_DIST) {
-                        text = listPlaces.get(n).getArrivalTime() + "着\n" + listPlaces.get(n).getDurationMinute() + "分滞在\n" + listPlaces.get(n).getDepartureTime() + "発";
-                    } else if (listPlaces.get(n).getType() == Place.TYPE_END) {
                         text = listPlaces.get(n).getArrivalTime() + "着";
                     }
                     textView.setText(text);
@@ -507,10 +497,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
-
                 return;
             }
-
         }.execute();
         return;
     }
