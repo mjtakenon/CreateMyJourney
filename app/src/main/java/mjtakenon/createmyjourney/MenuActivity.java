@@ -61,32 +61,15 @@ public class MenuActivity extends AppCompatActivity {
         listJourney.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ListView listView = (ListView) parent;
-                ArrayList<Place> listSelected = listPlaces.get(position);
-                ArrayList<Integer> listId = new ArrayList<Integer>();
-                ArrayList<String> listName = new ArrayList<String>();
-                ArrayList<String> listArrivalTime = new ArrayList<String>();
-                ArrayList<Integer> listDurationMinute = new ArrayList<Integer>();
-                ArrayList<String> listDepartureTime = new ArrayList<String>();
-                for(int n = 0; n < listSelected.size(); n++) {
-                    listId.add(listSelected.get(n).getId());
-                    listName.add(listSelected.get(n).getName());
-                    listArrivalTime.add(listSelected.get(n).getArrivalTime());
-                    listDurationMinute.add(listSelected.get(n).getDurationMinute());
-                    listDepartureTime.add(listSelected.get(n).getDepartureTime());
-                }
+//                ListView listView = (ListView) parent;
+
                 Bundle bundle = new Bundle();
                 bundle.putInt(MODE,MODE_LOAD);
 
-                bundle.putIntegerArrayList(PLACE_ID,listId);
-                bundle.putStringArrayList(PLACE_NAME,listName);
-                bundle.putStringArrayList(TIME_ARRIVAL,listArrivalTime);
-                bundle.putIntegerArrayList(TIME_DURATION,listDurationMinute);
-                bundle.putStringArrayList(TIME_DEPARTURE,listDepartureTime);
                 bundle.putString(JOURNEY_NAME,journeyNames.get(position));
                 bundle.putString(DATE_BEGIN,dateBegin.get(position));
 
-                bundle.putSerializable(SERIAL_PLACES,listSelected);
+                bundle.putSerializable(SERIAL_PLACES, listPlaces.get(position));
 
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);

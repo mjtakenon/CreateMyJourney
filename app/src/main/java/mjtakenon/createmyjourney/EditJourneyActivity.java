@@ -151,25 +151,13 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         //もし作成画面からきてたら出発地、目的地、到着地を追加
         this.listPlaces.clear();
         Bundle bundle = getIntent().getExtras();
-        if(bundle.getInt(MODE) == MODE_NEW) {
-            if (bundle.getString(PLACE_BEGIN) != null) {
-                Place placeBegin = new Place(listPlaces.size(), bundle.getString(PLACE_BEGIN), Place.TYPE_BEGIN, null, null, bundle.getString(TIME_BEGIN));
-                listPlaces.add(placeBegin);
-            }
-            if (bundle.getString(PLACE_DIST) != null) {
-                Place placeDist = new Place(listPlaces.size(), bundle.getString(PLACE_DIST), Place.TYPE_DIST, null, bundle.getInt(TIME_DURATION, 0), null);
-                listPlaces.add(placeDist);
-            }
-            if (bundle.getString(PLACE_END) != null) {
-                Place placeEnd = new Place(listPlaces.size(), bundle.getString(PLACE_END), Place.TYPE_END, bundle.getString(TIME_END), null, null);
-                listPlaces.add(placeEnd);
-            }
+        listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
+        /*if(bundle.getInt(MODE) == MODE_NEW) {
+            listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
         } else if (bundle.getInt(MODE) == MODE_LOAD) {
             // Bundleから受け取り
-            ArrayList<Place> places = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
-            listPlaces = places;
-
-        }
+            listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
+        }*/
     }
 
     //場所と追加用ボタンを交互に配置

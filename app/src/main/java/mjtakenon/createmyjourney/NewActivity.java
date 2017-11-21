@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -88,32 +89,38 @@ public class NewActivity extends AppCompatActivity {
                 EditText textPlaceDist = (EditText) findViewById(R.id.textPlaceDist);
                 EditText textDurationDist = (EditText) findViewById(R.id.textDurationDist);
 
+
+
                 //入力終了、旅画面への移行
                 Bundle bundle = new Bundle();
                 bundle.putInt(MODE, MODE_NEW);
                 bundle.putString(DATE_BEGIN,textDateBegin.getText().toString());
-//                intent.putExtra(DATE_END,textDateEnd.getText().toString());
-                bundle.putString(TIME_BEGIN,textTimeBegin.getText().toString());
-                bundle.putString(TIME_END,textTimeEnd.getText().toString());
-                bundle.putString(PLACE_BEGIN,textPlaceBegin.getText().toString());
-                bundle.putString(PLACE_END,textPlaceEnd.getText().toString());
-                bundle.putString(PLACE_DIST,textPlaceDist.getText().toString());
 
+                Integer durationTimeMinute = 0;
                 //目的地にいる時間の計算
                 try {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(FORMAT_TIME.parse(textDurationDist.getText().toString()));
-                    bundle.putInt(TIME_DURATION,calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60);
+                    durationTimeMinute = calendar.get(Calendar.MINUTE) + calendar.get(Calendar.HOUR)*60;
                 } catch (ParseException e) {
-                    bundle.putInt(TIME_DURATION,0);
                     e.printStackTrace();
                     return;
                 }
 
+                ArrayList<Place> places = new ArrayList<Place>();
+                places.add(new Place(0,textPlaceBegin.getText().toString(),Place.TYPE_BEGIN,null,null,textTimeBegin.getText().toString()));
+                places.add(new Place(1,textPlaceDist.getText().toString(),Place.TYPE_DIST,null,durationTimeMinute,null));
+                places.add(new Place(2,textPlaceEnd.getText().toString(),Place.TYPE_END,textTimeEnd.getText().toString(),null,null));
+
+                bundle.putSerializable(SERIAL_PLACES,places);
+
+                // 保存のデフォルト名用にDISTも渡しとく
+                bundle.putString(PLACE_DIST,textPlaceDist.getText().toString());
+
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-                //TODO キャンセルしたときにこの画面に戻ってくる必要があるか?仕様の検討
+                //TODO キャンセルしたときにこの画面に戻ってくる必要があるか?
                 finish();
             }
         });
