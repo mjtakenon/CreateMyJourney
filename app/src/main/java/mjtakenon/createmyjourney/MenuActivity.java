@@ -23,12 +23,12 @@ import java.util.ArrayList;
 
 import static mjtakenon.createmyjourney.Const.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_menu);
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
 //                .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(JOURNEY_NAME,journeyNames.get(position));
                 bundle.putString(DATE_BEGIN,dateBegin.get(position));
 
+                bundle.putSerializable(SERIAL_PLACES,listSelected);
+
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -109,9 +111,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ListView listJourney = (ListView) findViewById(R.id.listJourney);
-        if(!loadJourneyList(listJourney)) {
-            Toast.makeText(MainActivity.this,"ファイルを読み込めませんでした",Toast.LENGTH_LONG);
-        }
+        loadJourneyList(listJourney);
     }
 
     //csvから旅リスト読み込み
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             listPlaces.add(places);
             bufferReader.close();
         } catch (Exception e) {
-            Toast.makeText(MainActivity.this,"ファイルが存在しないか読み込めませんでした",Toast.LENGTH_SHORT);
+            Toast.makeText(MenuActivity.this,"ファイルが存在しないか読み込めませんでした",Toast.LENGTH_SHORT).show();
             deleteFile(SAVEFILE);
             e.printStackTrace();
             return false;
@@ -205,17 +205,17 @@ public class MainActivity extends AppCompatActivity {
                 outputStream.write((COLUMN_INFO + "," + journeyNames.get(n) + "," + dateBegin.get(n) + "\n").getBytes());
                 for (int m = 0; m < listPlaces.get(n).size(); m++) {
                     String string = COLUMN_PLACE +"," + listPlaces.get(n).get(m).getName();
-                    if(listPlaces.get(n).get(m).getType() != Place.TYPE_BEGIN) {
+                    if(!listPlaces.get(n).get(m).getType().equals(Place.TYPE_BEGIN)) {
                         string += "," + listPlaces.get(n).get(m).getArrivalTime();
                     } else {
                         string += ",";
                     }
-                    if(listPlaces.get(n).get(m).getType() == Place.TYPE_DIST) {
+                    if(listPlaces.get(n).get(m).getType().equals(Place.TYPE_DIST)) {
                         string += "," + listPlaces.get(n).get(m).getDurationMinute();
                     } else {
                         string += ",";
                     }
-                    if(listPlaces.get(n).get(m).getType() != Place.TYPE_END) {
+                    if(!listPlaces.get(n).get(m).getType().equals(Place.TYPE_END)) {
                         string += "," + listPlaces.get(n).get(m).getDepartureTime();
                     } else {
                         string += ",";
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         catch (Exception e) {
-           Toast.makeText(MainActivity.this,"ファイルが保存できませんでした",Toast.LENGTH_SHORT);
+           Toast.makeText(MenuActivity.this,"ファイルが保存できませんでした",Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

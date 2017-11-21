@@ -16,7 +16,7 @@ public class Const {
     static final Integer MODE_LOAD =    1;
     static final Integer MODE_ADD =     2;
 
-    /* Bundle ADD用 */
+    /* Bundle NEW用 */
     static final String  TIME_BEGIN =       "TIME_BEGIN";
     static final String  TIME_DURATION =    "TIME_DURATION";
     static final String  TIME_END =         "TIME_END";
@@ -33,7 +33,16 @@ public class Const {
     static final String  TIME_ARRIVAL =     "TIME_ARRIVAL";
     static final String  TIME_DEPARTURE =   "TIME_DEPARTURE";
 
-    /* Format */
+    /* Bundle New用 */
+//    static final String  LATLNG_BEGIN =      "PLACE_BEGIN";
+//    static final String  LATLNG_END =        "PLACE_BEGIN";
+//    static final String  ADD_RESULT =        "RESULT";
+//
+//    static final Integer RESULT_OK =         0;
+//    static final Integer RESULT_CANCEL =    1;
+    static final String  SERIAL_PLACES =   "SERIAL_PLACES";
+
+    /* フォーマット形式 */
     static final DateFormat FORMAT_DATE = new SimpleDateFormat("yyyy/MM/dd");
     static final DateFormat FORMAT_TIME = new SimpleDateFormat("HH:mm");
 
@@ -41,7 +50,7 @@ public class Const {
     static final String KEY_FLICKR_API = "54943877e5144fdb63a83366c3549bc5";
     static final String KEY_GOOGLE_API = "AIzaSyDIoGExI7NPDFq6IJwVTDfyeDgca9q2OQQ";
 
-    /* IDの開始番号 */
+    /* IDの割り当て */
     static final Integer ADDBUTTON_ID_BEGIN = 100;
     static final Integer TEXTVIEW_ID_BEGIN = 200;
 }

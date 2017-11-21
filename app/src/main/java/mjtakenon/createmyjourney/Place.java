@@ -1,17 +1,15 @@
 package mjtakenon.createmyjourney;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.io.Serializable;
+
 import mjtakenon.createmyjourney.Const.*;
 
 import static mjtakenon.createmyjourney.Const.*;
 
-/**
- * Created by mjtak on 2017/11/15.
- */
-
-
 //目的地
-public class Place {
+public class Place implements Serializable{
     private Integer id;                  //訪れる時刻を変更するためのID
     private String  name;               //訪れる場所名
     private String  arrivalTime;       //到着する時刻

@@ -48,6 +48,7 @@ import org.json.JSONObject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -57,7 +58,6 @@ import java.util.List;
 
 import static mjtakenon.createmyjourney.Const.*;
 
-// 元はAppCompatActivityだったけどFragmentActivityに変えた
 public class EditJourneyActivity extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +65,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         setContentView(R.layout.activity_journey);
 
         //レイアウト作成ボタン
-        Button buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+        Button buttonCreate = (Button) findViewById(R.id.buttonCreate);
+        buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
@@ -81,8 +81,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         .setPositiveButton("決定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if(!saveJourney(viewJourneyName.getText().toString())) {
-                                    //TODO Toastが表示されない
-                                    Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT);
+                                    Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 finish();
@@ -103,7 +102,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View view) {
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
-                //loadPlaces();
                 setPlaces(layoutPlan);
             }
         });
@@ -145,11 +143,10 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
         layoutPlan.removeAllViews();
-        loadPlaces();
         setPlaces(layoutPlan);
     }
 
-    // Intentから読み込み
+    // Intentから読み込み(=初回のみ使える)
     private void loadPlaces() {
         //もし作成画面からきてたら出発地、目的地、到着地を追加
         this.listPlaces.clear();
@@ -168,22 +165,10 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 listPlaces.add(placeEnd);
             }
         } else if (bundle.getInt(MODE) == MODE_LOAD) {
-            ArrayList<Integer> listId = bundle.getIntegerArrayList(PLACE_ID);
-            ArrayList<String> listName = bundle.getStringArrayList(PLACE_NAME);
-            ArrayList<String> listArrivalTime = bundle.getStringArrayList(TIME_ARRIVAL);
-            ArrayList<Integer> listDurationMinute = bundle.getIntegerArrayList(TIME_DURATION);
-            ArrayList<String> listDepartureTime = bundle.getStringArrayList(TIME_DEPARTURE);
-            for (int n = 0; n < listId.size(); n++) {
-                Place place;
-                if (n == 0) {
-                    place = new Place(listId.get(n), listName.get(n), Place.TYPE_BEGIN, listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
-                } else if (n == listId.size()-1) {
-                    place = new Place(listId.get(n), listName.get(n), Place.TYPE_END, listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
-                } else {
-                    place = new Place(listId.get(n), listName.get(n), Place.TYPE_DIST, listArrivalTime.get(n), listDurationMinute.get(n), listDepartureTime.get(n));
-                }
-                listPlaces.add(place);
-            }
+            // Bundleから受け取り
+            ArrayList<Place> places = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
+            listPlaces = places;
+
         }
     }
 
@@ -262,13 +247,11 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.displayImage(imageUrl, imageview);
                     imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    //Toast.makeText(context,imageUrl,Toast.LENGTH_LONG);
                 } else {
-                    //Toast.makeText(context,"ネットワーク接続がありません",Toast.LENGTH_SHORT);
+                    Toast.makeText(context,"ネットワーク接続がありません",Toast.LENGTH_SHORT).show();
                     imageview.setImageResource(R.drawable.error_small);
                     imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 }
-
             }
         }.execute(word);
     }
@@ -543,10 +526,10 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         try {
             addresses = coder.getFromLocationName(place.getName(), 1);
-            Toast.makeText(getApplication(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(EditJourneyActivity.this, addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
             address = addresses.get(0).getAddressLine(0);
         } catch (IOException e) {
-            Toast.makeText(getApplication(), "目的地の検索に失敗", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditJourneyActivity.this, "目的地の検索に失敗", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             return null;
         }
@@ -656,6 +639,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         }
 
         //線分集合を描画
+        googleMap.clear();
         polylineOptions.color(Color.RED);
         googleMap.addPolyline(polylineOptions);
 
@@ -714,9 +698,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         public void onClick(View v) {
             //TODO 経由地追加のウィンドウ開いて戻して
             int newId = v.getId()+1-ADDBUTTON_ID_BEGIN;
-            //Toast.makeText(EditJourneyActivity.this,String.valueOf(id),Toast.LENGTH_LONG);
             //Idは挿入する位置
-
+            //TODO AddPlaceActivity起動
 
             Place place = new Place(newId,"はままつフラワーパーク",Place.TYPE_DIST,null,60,null);
             insertPlace(place);
