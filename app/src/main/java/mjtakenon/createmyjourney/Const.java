@@ -42,9 +42,19 @@ public class Const {
 //    static final Integer RESULT_CANCEL =    1;
     static final String  SERIAL_PLACES =   "SERIAL_PLACES";
 
+    /* Bundle Add用 */
+    static final String  NEW_ID =           "NEW_ID";
+    static final String  NEW_DIST =         "NEW_DIST";
+
     /* フォーマット形式 */
     static final DateFormat FORMAT_DATE = new SimpleDateFormat("yyyy/MM/dd");
     static final DateFormat FORMAT_TIME = new SimpleDateFormat("HH:mm");
+
+    /* リクエストID */
+    static final Integer REQUEST_INSERT = 1;
+
+    static final Integer RESULT_OK =         1;
+    static final Integer RESULT_CANCEL =    0;
 
     /* APIキー */
     static final String KEY_FLICKR_API = "54943877e5144fdb63a83366c3549bc5";

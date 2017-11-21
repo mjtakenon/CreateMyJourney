@@ -163,6 +163,13 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle bundle = data.getExtras();
+
+        //TODO 目的地の場所がずれるから緯度と経度を使った経路検索をできるように
+        if(REQUEST_INSERT.equals(requestCode) && resultCode == RESULT_OK) {
+            OpenData openData = (OpenData)bundle.getSerializable(NEW_DIST);
+            Place place = new Place(bundle.getInt(NEW_ID),openData.getName(),Place.TYPE_DIST,null,60,null);
+            insertPlace(place);
+        }
     }
 
 
@@ -527,31 +534,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         return;
     }
 
-    @Nullable
-    private String getAddressByPlace(Place place) {
-
-        if (!Geocoder.isPresent()) {
-            Toast.makeText(getApplication(), "位置情報サービスが無効", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-
-        Geocoder coder = new Geocoder(getApplicationContext());
-
-        List<Address> addresses;
-        String address;
-
-        try {
-            addresses = coder.getFromLocationName(place.getName(), 1);
-            //Toast.makeText(EditJourneyActivity.this, addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-            address = addresses.get(0).getAddressLine(0);
-        } catch (IOException e) {
-            Toast.makeText(EditJourneyActivity.this, "目的地の検索に失敗", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-            return null;
-        }
-        return address;
-    }
-
     private void addPlaceRow(LinearLayout layout, Place place) {
         //時間とか表示するビューを作成
         TextView textTime = new TextView(this);
@@ -723,17 +705,23 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         return true;
     }
 
-    private class AddButtonOnClickListener implements View.OnClickListener
-    {
+    private class AddButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             //TODO 経由地追加のウィンドウ開いて戻して
             int newId = v.getId()+1-ADDBUTTON_ID_BEGIN;
             //Idは挿入する位置
             //TODO AddPlaceActivity起動
-
-            Place place = new Place(newId,"はままつフラワーパーク",Place.TYPE_DIST,null,60,null);
-            insertPlace(place);
+//            Place place = new Place(newId,"はままつフラワーパーク",Place.TYPE_DIST,null,60,null);
+//            insertPlace(place);
+            Bundle bundle = new Bundle();
+            bundle.putInt(MODE,MODE_ADD);
+            bundle.putSerializable(PLACE_BEGIN,listPlaces.get(v.getId()-ADDBUTTON_ID_BEGIN));
+            bundle.putSerializable(PLACE_END,listPlaces.get(v.getId()-ADDBUTTON_ID_BEGIN+1));
+            bundle.putInt(NEW_ID,newId);
+            Intent intent = new Intent(getApplication(), AddPlaceActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent,REQUEST_INSERT);
         }
     }
 

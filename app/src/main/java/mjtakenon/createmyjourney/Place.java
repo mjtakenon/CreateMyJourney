@@ -15,7 +15,7 @@ public class Place implements Serializable{
     private String  arrivalTime;       //到着する時刻
     private Integer durationMinute;    //訪れている時間(分)
     private String  departureTime;     //出発する時刻
-    private LatLng  latLng;             //緯度経度
+    private transient LatLng  latLng;             //緯度経度
     private Integer type;               //場所の種類
 
     public Place(Place place) {

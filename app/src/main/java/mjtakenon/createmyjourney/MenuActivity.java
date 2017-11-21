@@ -49,7 +49,7 @@ public class MenuActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //サブアクティビティに移動
+                //Journeyを新規作成する画面へ
                 Intent intent = new Intent(getApplication(), NewActivity.class);
                 startActivity(intent);
             }
