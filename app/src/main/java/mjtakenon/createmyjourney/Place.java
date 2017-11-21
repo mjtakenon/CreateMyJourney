@@ -67,7 +67,8 @@ public class Place implements Serializable{
     public LatLng getLatLng() { return latLng; }
 
     public Integer getAddButtonId() { return id + ADDBUTTON_ID_BEGIN; }
-    public Integer getTextViewId() { return id + TEXTVIEW_ID_BEGIN; }
+    public Integer getTextMovingId() { return id + TEXTMOVING_ID_BEGIN; }
+    public Integer getTextViewId() { return id + TEXTPLACE_ID_BEGIN; }
 
     public void setId(Integer id) { this.id = id; }
     public void setName(String name) { this.name = name; }

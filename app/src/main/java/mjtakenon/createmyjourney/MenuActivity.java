@@ -180,6 +180,7 @@ public class MenuActivity extends AppCompatActivity {
         return true;
     }
 
+    //TODO セーブデータをシリアライズ化するのにJourneyクラスを作成する必要がある
     Boolean saveJourneyList() {
         try {
             FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_PRIVATE);

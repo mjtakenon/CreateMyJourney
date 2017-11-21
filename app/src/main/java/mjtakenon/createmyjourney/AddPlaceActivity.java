@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +62,7 @@ public class AddPlaceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journey);
+        setContentView(R.layout.activity_addplace);
 
         //レイアウト作成ボタン
         Button buttonSubmit = (Button) findViewById(R.id.buttonDecide);
@@ -79,6 +80,10 @@ public class AddPlaceActivity extends AppCompatActivity {
             }
         });
 
+        LinearLayout layoutDestinations = (LinearLayout)findViewById(R.id.layoutDestinations);
+
+        setDestinations(layoutDestinations);
+
     }
 
     // 画面に戻ってきたとき
@@ -86,6 +91,20 @@ public class AddPlaceActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
+    }
+
+    //目的地をオープンデータから読み込み、表示
+    private void setDestinations(LinearLayout layout) {
+        //種類ごとに分類して表示
+        for(int n = 0; n < 1; n++) {
+
+            //目的地の分類の名前
+            TextView textGroup = new TextView(this);
+            textGroup.setText("道の駅");
+            //目的地を横並びで表示(スクロールあり)
+            ScrollView scrollView = new ScrollView(this);
+
+        }
     }
 
     private void setFlickrImageByWord(final Context context, final ImageView imageview, final String word) {

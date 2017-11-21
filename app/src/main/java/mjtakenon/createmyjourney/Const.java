@@ -52,5 +52,6 @@ public class Const {
 
     /* IDの割り当て */
     static final Integer ADDBUTTON_ID_BEGIN = 100;
-    static final Integer TEXTVIEW_ID_BEGIN = 200;
+    static final Integer TEXTMOVING_ID_BEGIN = 150;
+    static final Integer TEXTPLACE_ID_BEGIN = 200;
 }

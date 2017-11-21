@@ -1,7 +1,10 @@
 package mjtakenon.createmyjourney;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -103,6 +107,9 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
                 layoutPlan.removeAllViews();
                 setPlaces(layoutPlan);
+
+                //所要時間を再計算
+                setTimeRequired();
             }
         });
 
@@ -119,8 +126,13 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         directionResponceJSON = null;
         mapReady = false;
 
+        //BundleからArrayListにPlaceを読み込む
         loadPlaces();
+        //ArrayListから読み込み表示
         setPlaces(layoutPlan);
+
+        //所要時間を計算
+        setTimeRequired();
     }
 
     @Override
@@ -141,10 +153,18 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     public void onResume() {
         super.onResume();
 
-        LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
+        /*LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
         layoutPlan.removeAllViews();
-        setPlaces(layoutPlan);
+        setPlaces(layoutPlan);*/
     }
+
+    // AddPlacesから帰ってきたとき
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bundle bundle = data.getExtras();
+    }
+
 
     // Intentから読み込み(=初回のみ使える)
     private void loadPlaces() {
@@ -165,10 +185,9 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         for(int n = 0; n < listPlaces.size(); n++) {
             addPlaceRow(layout, listPlaces.get(n));
             if (n + 1 < listPlaces.size()) {
-                addDetourButton(layout,listPlaces.get(n).getAddButtonId());
+                addDetourButton(layout,listPlaces.get(n).getAddButtonId(),listPlaces.get(n).getTextMovingId());
             }
         }
-        setTimeRequired();
     }
 
     private void setPhotozouImageByWord(final Context context, final ImageView imageview, final String word) {
@@ -330,7 +349,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         }.execute();
     }
 
-    //Google Directionsを使って所要時間を取得、placesのtextにセット
+    //GoogleDirectionsを使って所要時間を取得、placesのtextにセット
     private void setTimeRequired() {
 
         new AsyncTask<Void, Void, ArrayList<Integer>>() {
@@ -443,6 +462,15 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     return;
                 }
 
+                //移動時間の計算・反映
+                for(int n = 0; n < listPlaces.size()-1; n++) {
+                    TextView textView = (TextView) findViewById(listPlaces.get(n).getTextMovingId());
+                    Integer minute = timeSecs.get(n)/60;
+                    textView.setText("移動:" + minute + "分");
+                }
+
+
+                //目的地の移動の計算・反映
                 for (int n = 0; n < listPlaces.size(); n++) {
                     Date dateBegin;
                     TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
@@ -532,13 +560,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         textTime.setId(place.getTextViewId());
         textTime.setPadding(0, 0, 20, 0);
 
-        //レイアウトを取得
-        LinearLayout layoutTime = new LinearLayout(this);
-        layoutTime.setOrientation(LinearLayout.HORIZONTAL);
-
-        layoutTime.addView(textTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        layoutTime.setPadding(20, 20, 30, 20);
 
         //建物写真と建物名称を右に
         LinearLayout layoutPlace = new LinearLayout(this);
@@ -553,8 +574,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         layoutPlace.addView(imagePlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         layoutPlace.addView(textPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        layoutTime.addView(layoutPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
         imagePlace.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -564,17 +583,40 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 // 出発地と到着地は削除不可にするとか?
             }
         });
-        layout.addView(layoutTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        //レイアウトに追加
+        LinearLayout layoutTimeLine = new LinearLayout(this);
+        layoutTimeLine.setPadding(20, 20, 30, 20);
+
+        layoutTimeLine.addView(textTime, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layoutTimeLine.addView(layoutPlace, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        //TODO 縦幅は指定
+        layout.addView(layoutTimeLine, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
-    private void addDetourButton(LinearLayout layout, int id) {
+    private void addDetourButton(LinearLayout layout, int buttonId, int textId) {
+        LinearLayout layoutButton = new LinearLayout(this);
+        layoutButton.setOrientation(LinearLayout.HORIZONTAL);
+
+        //movingText
+        TextView textMoving = new TextView(this);
+        textMoving.setId(textId);
+        textMoving.setText("計算中...");
+        textMoving.setPadding(0, 0, 20, 0);
+
+        //addButton
         ImageButton buttonAddDetour = new ImageButton(this);
         buttonAddDetour.setImageResource(R.drawable.plus_black_small);
-        buttonAddDetour.setId(id);
+        buttonAddDetour.setId(buttonId);
         buttonAddDetour.setOnClickListener(new AddButtonOnClickListener());
-        layout.addView(buttonAddDetour, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-    }
 
+        layoutButton.addView(textMoving, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layoutButton.addView(buttonAddDetour, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layoutButton.setPadding(20, 20, 30, 20);
+
+        layout.addView(layoutButton, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    }
 
     //JSONからMapにDirectionを表示
     private void DrawDirections() {
@@ -641,6 +683,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,25));
     }
 
+    @NonNull
     private Boolean saveJourney(String journeyName) {
         if(journeyName.contains(",")) {
             return false;
@@ -704,6 +747,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
         layoutPlan.removeAllViews();
         setPlaces(layoutPlan);
+
+        setTimeRequired();
     }
 
 

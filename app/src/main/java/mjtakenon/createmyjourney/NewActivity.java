@@ -23,7 +23,7 @@ public class NewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new);
 
         EditText textDateBegin = (EditText) findViewById(R.id.textDateBegin);
-        //TODO そもそも日帰りしか対応してない
+        //TODO 日帰りしか対応してない
 //        EditText textDateEnd = (EditText) findViewById(R.id.textDateEnd);
         EditText textTimeBegin = (EditText) findViewById(R.id.textTimeBegin);
         EditText textTimeEnd = (EditText) findViewById(R.id.textTimeEnd);
