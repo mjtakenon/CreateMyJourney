@@ -708,12 +708,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     private class AddButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            //TODO 経由地追加のウィンドウ開いて戻して
             int newId = v.getId()+1-ADDBUTTON_ID_BEGIN;
             //Idは挿入する位置
-            //TODO AddPlaceActivity起動
-//            Place place = new Place(newId,"はままつフラワーパーク",Place.TYPE_DIST,null,60,null);
-//            insertPlace(place);
             Bundle bundle = new Bundle();
             bundle.putInt(MODE,MODE_ADD);
             bundle.putSerializable(PLACE_BEGIN,listPlaces.get(v.getId()-ADDBUTTON_ID_BEGIN));
