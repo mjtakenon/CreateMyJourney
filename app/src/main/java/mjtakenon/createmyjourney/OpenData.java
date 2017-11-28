@@ -7,6 +7,9 @@ import java.io.Serializable;
 // オープンデータ1つ
 public class OpenData implements Serializable{
 
+    private static final long serialVersionUID = 114514L;
+
+
     public OpenData(Integer id, String attribute, String name, String address, Double latitude, Double longitude) {
         this.id = id;
         this.name = name;
