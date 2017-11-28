@@ -540,7 +540,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         textTime.setText("検索中...");
         textTime.setId(place.getTextViewId());
-        textTime.setPadding(0, 0, 20, 0);
+        textTime.setPadding(0, 0, 16, 0);
 
 
         //建物写真と建物名称を右に

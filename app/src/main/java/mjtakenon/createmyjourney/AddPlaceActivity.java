@@ -202,7 +202,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 //ImageとTextのペアを作成
                 layoutImageName.addView(imageView, LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                 layoutImageName.addView(textView, LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutImageName.setPadding(10,10,10,10);
+                layoutImageName.setPadding(8,8,8,8);
 
                 layoutImageName.setOnClickListener(new View.OnClickListener() {
                     @Override
