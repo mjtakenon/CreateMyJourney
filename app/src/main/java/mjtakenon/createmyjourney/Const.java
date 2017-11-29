@@ -33,6 +33,8 @@ public class Const {
     static final String  TIME_ARRIVAL =     "TIME_ARRIVAL";
     static final String  TIME_DEPARTURE =   "TIME_DEPARTURE";
 
+    static final String  JOURNEY =          "JOURNEY";
+
     /* Bundle New用 */
 //    static final String  LATLNG_BEGIN =      "PLACE_BEGIN";
 //    static final String  LATLNG_END =        "PLACE_BEGIN";

@@ -13,7 +13,6 @@ public class Place implements Serializable{
 
     private static final long serialVersionUID = 1919810L;
 
-
     private Integer id;                  //訪れる時刻を変更するためのID
     private String  name;               //訪れる場所名
     private String  arrivalTime;       //到着する時刻

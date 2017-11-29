@@ -49,8 +49,12 @@ import com.squareup.okhttp.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
@@ -78,7 +82,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 if (getIntent().getExtras().getInt(MODE) == MODE_NEW) {
                     viewJourneyName.setText(getIntent().getExtras().getString(DATE_BEGIN) + " " + getIntent().getExtras().getString(PLACE_DIST));
                 } else if (getIntent().getExtras().getInt(MODE) == MODE_LOAD) {
-                    viewJourneyName.setText(getIntent().getExtras().getString(JOURNEY_NAME));
+                    viewJourneyName.setText(journey.getName());
                 }
                 //旅名を入れるダイアログ
                 new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
@@ -176,23 +180,30 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     // Intentから読み込み(=初回のみ使える)
     private void loadPlaces() {
         //もし作成画面からきてたら出発地、目的地、到着地を追加
-        this.listPlaces.clear();
+        //this.listPlaces.clear();
+
+        //TODO NewActivityからの読み込みもJourneyクラスにしてえな
+
         Bundle bundle = getIntent().getExtras();
-        listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
-        /*if(bundle.getInt(MODE) == MODE_NEW) {
-            listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
-        } else if (bundle.getInt(MODE) == MODE_LOAD) {
-            // Bundleから受け取り
-            listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
-        }*/
+
+        if(bundle.getInt(MODE) == MODE_LOAD) {
+            journey = (Journey) bundle.getSerializable(JOURNEY);
+        } else if(bundle.getInt(MODE) == MODE_NEW) {
+            journey = new Journey();
+            journey.setPlaces((ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES));
+        }
+
+        //listPlaces = (ArrayList<Place>)bundle.getSerializable(SERIAL_PLACES);
+
     }
 
     //場所と追加用ボタンを交互に配置
     private void setPlaces(LinearLayout layout) {
-        for(int n = 0; n < listPlaces.size(); n++) {
-            addPlaceRow(layout, listPlaces.get(n));
-            if (n + 1 < listPlaces.size()) {
-                addDetourButton(layout,listPlaces.get(n).getAddButtonId(),listPlaces.get(n).getTextMovingId());
+        for(int n = 0; n < journey.getPlaces().size(); n++) {
+            Place place = journey.getPlaces().get(n);
+            addPlaceRow(layout, place);
+            if (n + 1 < journey.getPlaces().size()) {
+                addDetourButton(layout,place.getAddButtonId(),place.getTextMovingId());
             }
         }
     }
@@ -371,16 +382,18 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 String encodedEndPlace;         //最後の場所名
                 ArrayList<String> encodedDistPlaces = new ArrayList<String>();
 
+                ArrayList<Place> places = journey.getPlaces();
+
                 //placesが2以上じゃないと算出不可
-                if(listPlaces.size() < 2) {
+                if(places.size() < 2) {
                     return;
                 }
 
                 try {
-                    encodedBeginPlace = URLEncoder.encode(listPlaces.get(0).getName(), "UTF-8");
-                    encodedEndPlace = URLEncoder.encode(listPlaces.get(listPlaces.size() - 1).getName(), "UTF-8");
-                    for (int n = 1; n < listPlaces.size() - 1; n++) {
-                        encodedDistPlaces.add(URLEncoder.encode(listPlaces.get(n).getName(), "UTF-8"));
+                    encodedBeginPlace = URLEncoder.encode(places.get(0).getName(), "UTF-8");
+                    encodedEndPlace = URLEncoder.encode(places.get(places.size() - 1).getName(), "UTF-8");
+                    for (int n = 1; n < places.size() - 1; n++) {
+                        encodedDistPlaces.add(URLEncoder.encode(places.get(n).getName(), "UTF-8"));
                     }
                 } catch (UnsupportedEncodingException e) {
                     encodedBeginPlace = " ";
@@ -443,7 +456,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         return null;
                     }
                     //JSONから各移動時間を取得
-                    for (int n = 0; n < listPlaces.size() - 1; n++) {
+                    for (int n = 0; n < journey.getPlaces().size() - 1; n++) {
                         Integer timeSec = directionResponceJSON.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(n).getJSONObject("duration").getInt("value");
                         timeSecs.add(timeSec);
                     }
@@ -457,37 +470,39 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             @Override
             protected void onPostExecute(ArrayList<Integer> timeSecs) {
 
+                ArrayList<Place> places = journey.getPlaces();
+
                 if(timeSecs == null) {
                     if (progressDialog != null && progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
 
-                    for (int n = 0; n < listPlaces.size(); n++) {
-                        TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
+                    for (int n = 0; n < places.size(); n++) {
+                        TextView textView = (TextView) findViewById(places.get(n).getTextViewId());
                         textView.setText("取得失敗");
                     }
                     return;
                 }
 
                 //移動時間の計算・反映
-                for(int n = 0; n < listPlaces.size()-1; n++) {
-                    TextView textView = (TextView) findViewById(listPlaces.get(n).getTextMovingId());
+                for(int n = 0; n < places.size()-1; n++) {
+                    TextView textView = (TextView) findViewById(places.get(n).getTextMovingId());
                     Integer minute = timeSecs.get(n)/60;
                     textView.setText("移動:" + minute + "分");
                 }
 
 
                 //目的地の移動の計算・反映
-                for (int n = 0; n < listPlaces.size(); n++) {
+                for (int n = 0; n < places.size(); n++) {
                     Date dateBegin;
-                    TextView textView = (TextView) findViewById(listPlaces.get(n).getTextViewId());
+                    TextView textView = (TextView) findViewById(places.get(n).getTextViewId());
 
                     //移動時間を計算
                     try {
-                        if (listPlaces.get(n).getType().equals(Place.TYPE_BEGIN)) { //出発地だった場合
-                            dateBegin = FORMAT_TIME.parse(listPlaces.get(n).getDepartureTime());
+                        if (places.get(n).getType().equals(Place.TYPE_BEGIN)) { //出発地だった場合
+                            dateBegin = FORMAT_TIME.parse(places.get(n).getDepartureTime());
                         } else {     //それ以外は前の場所の出発時刻を取得
-                            dateBegin = FORMAT_TIME.parse(listPlaces.get(n-1).getDepartureTime());
+                            dateBegin = FORMAT_TIME.parse(places.get(n-1).getDepartureTime());
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -505,19 +520,19 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     String text = "";
                     // 各Placeの時間を計算
                     // 同時にtextViewに表示するテキストを作成
-                    if(listPlaces.get(n).getType().equals(Place.TYPE_BEGIN)) {
-                        listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
-                        text = listPlaces.get(n).getDepartureTime() + "発";
-                    } else if (listPlaces.get(n).getType().equals(Place.TYPE_DIST)) {
+                    if(places.get(n).getType().equals(Place.TYPE_BEGIN)) {
+                        places.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = places.get(n).getDepartureTime() + "発";
+                    } else if (places.get(n).getType().equals(Place.TYPE_DIST)) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
-                        listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
-                        calendar.add(Calendar.MINUTE, listPlaces.get(n).getDurationMinute());
-                        listPlaces.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
-                        text = listPlaces.get(n).getArrivalTime() + "着\n" + listPlaces.get(n).getDurationMinute() + "分滞在\n" + listPlaces.get(n).getDepartureTime() + "発";
-                    } else if (listPlaces.get(n).getType().equals(Place.TYPE_END)) {
+                        places.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
+                        calendar.add(Calendar.MINUTE, places.get(n).getDurationMinute());
+                        places.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = places.get(n).getArrivalTime() + "着\n" + places.get(n).getDurationMinute() + "分滞在\n" + places.get(n).getDepartureTime() + "発";
+                    } else if (places.get(n).getType().equals(Place.TYPE_END)) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
-                        listPlaces.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
-                        text = listPlaces.get(n).getArrivalTime() + "着";
+                        places.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = places.get(n).getArrivalTime() + "着";
                     }
                     textView.setText(text);
                 }
@@ -656,10 +671,10 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         googleMap.addPolyline(polylineOptions);
 
         //マーカーを描画
-        for(int n = 0; n < listPlaces.size(); n++) {
+        for(int n = 0; n < journey.getPlaces().size(); n++) {
             //マーカーの座標を場所の座標に設定
-            listPlaces.get(n).setLatLng(marker.get(n));
-            googleMap.addMarker(new MarkerOptions().position(marker.get(n)).title(listPlaces.get(n).getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            journey.getPlaces().get(n).setLatLng(marker.get(n));
+            googleMap.addMarker(new MarkerOptions().position(marker.get(n)).title(journey.getPlaces().get(n).getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         }
         //カメラの中心は左上と右下の中心、左右に25ピクセルのマージンつけて
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,25));
@@ -670,14 +685,24 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         if(journeyName.contains(",")) {
             return false;
         }
-        try {
-            FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_APPEND);
-            //info,旅行名,旅行日時
-            outputStream.write((COLUMN_INFO + "," + journeyName + "," + getIntent().getExtras().getString(DATE_BEGIN) + "\n").getBytes());
 
-            for(int n = 0; n < listPlaces.size(); n++) {
+        ArrayList<Journey> journeys;
+
+        try {
+            journey.setName(journeyName);
+
+            InputStream inputStream = openFileInput(SAVEFILE);
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            journeys = (ArrayList<Journey>) objectInputStream.readObject();
+            objectInputStream.close();
+            inputStream.close();
+
+
+            //info,旅行名,旅行日時
+            /*outputStream.write((COLUMN_INFO + "," + journeyName + "," + getIntent().getExtras().getString(DATE_BEGIN) + "\n").getBytes());
+
+            for(Place place : journey.getPlaces()) {
                 //マーカーの座標を場所の座標に設定
-                Place place = listPlaces.get(n);
                 String string = COLUMN_PLACE + "," + place.getName();
                 if(place.getArrivalTime() != null) {
                     string += "," + place.getArrivalTime();
@@ -697,11 +722,31 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 string += "\n";
                 outputStream.write(string.getBytes());
             }
-            outputStream.close();
+            */
+        } catch (FileNotFoundException e) {
+            journeys = new ArrayList<Journey>();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        journeys.add(journey);
+
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = openFileOutput(SAVEFILE, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(journeys);
+            objectOutputStream.close();
+            fileOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+
         return true;
     }
 
@@ -712,8 +757,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             //Idは挿入する位置
             Bundle bundle = new Bundle();
             bundle.putInt(MODE,MODE_ADD);
-            bundle.putSerializable(PLACE_BEGIN,listPlaces.get(v.getId()-ADDBUTTON_ID_BEGIN));
-            bundle.putSerializable(PLACE_END,listPlaces.get(v.getId()-ADDBUTTON_ID_BEGIN+1));
+            bundle.putSerializable(PLACE_BEGIN,journey.getPlaces().get(v.getId()-ADDBUTTON_ID_BEGIN));
+            bundle.putSerializable(PLACE_END,journey.getPlaces().get(v.getId()-ADDBUTTON_ID_BEGIN+1));
             bundle.putInt(NEW_ID,newId);
             Intent intent = new Intent(getApplication(), AddPlaceActivity.class);
             intent.putExtras(bundle);
@@ -723,10 +768,10 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
     private void insertPlace(Place place) {
         int insertPosition = place.getId();
-        for(int n = insertPosition; n < listPlaces.size(); n++) {
-            listPlaces.get(n).setId(n+1);
+        for(int n = insertPosition; n < journey.getPlaces().size(); n++) {
+            journey.getPlaces().get(n).setId(n+1);
         }
-        listPlaces.add(insertPosition,place);
+        journey.getPlaces().add(insertPosition,place);
 
         LinearLayout layoutPlan = (LinearLayout) findViewById(R.id.layoutPlan);
         layoutPlan.removeAllViews();
@@ -736,7 +781,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     }
 
 
-    private ArrayList<Place> listPlaces = new ArrayList<Place>();
+    //private ArrayList<Place> listPlaces = new ArrayList<Place>();
+    Journey journey;
 
     private JSONObject directionResponceJSON;
 

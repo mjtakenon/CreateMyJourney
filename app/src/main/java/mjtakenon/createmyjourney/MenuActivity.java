@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import static mjtakenon.createmyjourney.Const.*;
@@ -66,10 +68,12 @@ public class MenuActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt(MODE,MODE_LOAD);
 
-                bundle.putString(JOURNEY_NAME,journeyNames.get(position));
-                bundle.putString(DATE_BEGIN,dateBegin.get(position));
+                bundle.putSerializable(JOURNEY, journeys.get(position));
 
-                bundle.putSerializable(SERIAL_PLACES, listPlaces.get(position));
+//                bundle.putString(JOURNEY_NAME,journeyNames.get(position));
+//                bundle.putString(DATE_BEGIN,dateBegin.get(position));
+//
+//                bundle.putSerializable(SERIAL_PLACES, listPlaces.get(position));
 
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
@@ -81,8 +85,10 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ListView listView = (ListView) parent;
-                journeyNames.remove(position);
-                listPlaces.remove(position);
+                //TODO 削除確認のダイヤログ
+//                journeyNames.remove(position);
+//                listPlaces.remove(position);
+                journeys.remove(position);
                 saveJourneyList();
                 loadJourneyList(listView);
                 return true;
@@ -101,9 +107,20 @@ public class MenuActivity extends AppCompatActivity {
     Boolean loadJourneyList(ListView listJourney) {
         try {
             InputStream inputStream = openFileInput(SAVEFILE);
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            journeys = (ArrayList<Journey>) objectInputStream.readObject();
+
+            objectInputStream.close();
+            inputStream.close();
+
+            if(journeys == null) {
+                return false;
+            }
+
+
+            /*
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferReader = new BufferedReader(inputStreamReader);
-
             //旅の経由地の配列が複数
             listPlaces = new ArrayList<ArrayList<Place>>();
             //旅の名前の配列
@@ -166,6 +183,7 @@ public class MenuActivity extends AppCompatActivity {
             }
             listPlaces.add(places);
             bufferReader.close();
+            */
         } catch (Exception e) {
             Toast.makeText(MenuActivity.this,"ファイルが存在しないか読み込めませんでした",Toast.LENGTH_SHORT).show();
             deleteFile(SAVEFILE);
@@ -173,9 +191,13 @@ public class MenuActivity extends AppCompatActivity {
             return false;
         }
 
-        String[] strs = journeyNames.toArray(new String[0]);
-        ArrayAdapter<String> aA = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,strs);
-        listJourney.setAdapter(aA);
+        ArrayList<String> names = new ArrayList<String>();
+        for(Journey journey : journeys) {
+            names.add(journey.getName());
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,names.toArray(new String[0]));
+        listJourney.setAdapter(arrayAdapter);
 
         return true;
     }
@@ -183,9 +205,13 @@ public class MenuActivity extends AppCompatActivity {
     //TODO セーブデータをシリアライズ化するのにJourneyクラスを作成する必要がある
     Boolean saveJourneyList() {
         try {
-            FileOutputStream outputStream = openFileOutput(SAVEFILE, Context.MODE_PRIVATE);
+            FileOutputStream fileOutputStream = openFileOutput(SAVEFILE, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(journeys);
+            objectOutputStream.close();
+            fileOutputStream.close();
             //info,旅行名,旅行日時
-            for (int n = 0; n < listPlaces.size(); n++) {
+            /*for (int n = 0; n < listPlaces.size(); n++) {
                 outputStream.write((COLUMN_INFO + "," + journeyNames.get(n) + "," + dateBegin.get(n) + "\n").getBytes());
                 for (int m = 0; m < listPlaces.get(n).size(); m++) {
                     String string = COLUMN_PLACE +"," + listPlaces.get(n).get(m).getName();
@@ -207,7 +233,8 @@ public class MenuActivity extends AppCompatActivity {
                     string += "\n";
                     outputStream.write(string.getBytes());
                 }
-            }
+            }*/
+
         }
         catch (Exception e) {
            Toast.makeText(MenuActivity.this,"ファイルが保存できませんでした",Toast.LENGTH_SHORT).show();
@@ -216,8 +243,9 @@ public class MenuActivity extends AppCompatActivity {
         return true;
     }
 
-    private ArrayList<ArrayList<Place>> listPlaces = null;
-    ArrayList<String> journeyNames = null;
-    ArrayList<String> dateBegin = null;
+    /*private ArrayList<ArrayList<Place>> listPlaces = null;
+    private ArrayList<String> journeyNames = null;
+    private ArrayList<String> dateBegin = null;*/
+    private ArrayList<Journey> journeys;
 }
 
