@@ -103,7 +103,8 @@ public class MenuActivity extends AppCompatActivity {
         loadJourneyList(listJourney);
     }
 
-    //csvから旅リスト読み込み
+    //旅リスト読み込み
+    //TODO saveとloadをモジュール化して分割
     Boolean loadJourneyList(ListView listJourney) {
         try {
             InputStream inputStream = openFileInput(SAVEFILE);
@@ -116,74 +117,6 @@ public class MenuActivity extends AppCompatActivity {
             if(journeys == null) {
                 return false;
             }
-
-
-            /*
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferReader = new BufferedReader(inputStreamReader);
-            //旅の経由地の配列が複数
-            listPlaces = new ArrayList<ArrayList<Place>>();
-            //旅の名前の配列
-            journeyNames = new ArrayList<String>();
-            dateBegin = new ArrayList<String>();
-            //1つの旅の経由地の配列
-            ArrayList<Place> places = null;
-            String line;
-            Integer placeId = 0;
-            Integer journeyId = 0;
-            while ((line = bufferReader.readLine()) != null) {
-                String[] string = line.split(",");
-                if (string[0].equals(COLUMN_INFO)) {          //旅の情報
-                    journeyNames.add(string[1]);         //リストに表示するための名前
-                    dateBegin.add(string[2]);            //旅の出発日
-                    if(places != null) {
-                        for(int n = 0; n < places.size(); n++) {
-                            if(n == 0) {
-                                places.get(n).setType(Place.TYPE_BEGIN);
-                            } else if (n == places.size()-1) {
-                                places.get(n).setType(Place.TYPE_END);
-                            } else {
-                                places.get(n).setType(Place.TYPE_DIST);
-                            }
-                        }
-                        listPlaces.add(places);
-                    }
-                    places = new ArrayList<Place>();
-                    placeId = 0;
-                    journeyId++;
-                } else if(string[0].equals(COLUMN_PLACE)) {  //地点情報
-                    Place place = new Place(placeId,string[1]);
-                    if(string.length >= 3) {
-                        if (!string[2].isEmpty()) {
-                            place.setArrivalTime(string[2]);
-                        }
-                    }
-                    if(string.length >= 4) {
-                        if (!string[3].isEmpty()) {
-                            place.setDurationMinute(Integer.valueOf(string[3]));
-                        }
-                    }
-                    if(string.length >= 5) {
-                        if (!string[4].isEmpty()) {
-                            place.setDepartureTime(string[4]);
-                        }
-                    }
-                    places.add(place);
-                    placeId++;
-                }
-            }
-            for(int n = 0; n < places.size(); n++) {
-                if(n == 0) {
-                    places.get(n).setType(Place.TYPE_BEGIN);
-                } else if (n == places.size()-1) {
-                    places.get(n).setType(Place.TYPE_END);
-                } else {
-                    places.get(n).setType(Place.TYPE_DIST);
-                }
-            }
-            listPlaces.add(places);
-            bufferReader.close();
-            */
         } catch (Exception e) {
             Toast.makeText(MenuActivity.this,"ファイルが存在しないか読み込めませんでした",Toast.LENGTH_SHORT).show();
             deleteFile(SAVEFILE);
@@ -202,7 +135,6 @@ public class MenuActivity extends AppCompatActivity {
         return true;
     }
 
-    //TODO セーブデータをシリアライズ化するのにJourneyクラスを作成する必要がある
     Boolean saveJourneyList() {
         try {
             FileOutputStream fileOutputStream = openFileOutput(SAVEFILE, Context.MODE_PRIVATE);
@@ -210,31 +142,6 @@ public class MenuActivity extends AppCompatActivity {
             objectOutputStream.writeObject(journeys);
             objectOutputStream.close();
             fileOutputStream.close();
-            //info,旅行名,旅行日時
-            /*for (int n = 0; n < listPlaces.size(); n++) {
-                outputStream.write((COLUMN_INFO + "," + journeyNames.get(n) + "," + dateBegin.get(n) + "\n").getBytes());
-                for (int m = 0; m < listPlaces.get(n).size(); m++) {
-                    String string = COLUMN_PLACE +"," + listPlaces.get(n).get(m).getName();
-                    if(!listPlaces.get(n).get(m).getType().equals(Place.TYPE_BEGIN)) {
-                        string += "," + listPlaces.get(n).get(m).getArrivalTime();
-                    } else {
-                        string += ",";
-                    }
-                    if(listPlaces.get(n).get(m).getType().equals(Place.TYPE_DIST)) {
-                        string += "," + listPlaces.get(n).get(m).getDurationMinute();
-                    } else {
-                        string += ",";
-                    }
-                    if(!listPlaces.get(n).get(m).getType().equals(Place.TYPE_END)) {
-                        string += "," + listPlaces.get(n).get(m).getDepartureTime();
-                    } else {
-                        string += ",";
-                    }
-                    string += "\n";
-                    outputStream.write(string.getBytes());
-                }
-            }*/
-
         }
         catch (Exception e) {
            Toast.makeText(MenuActivity.this,"ファイルが保存できませんでした",Toast.LENGTH_SHORT).show();

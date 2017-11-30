@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -95,6 +97,14 @@ public class AddPlaceActivity extends AppCompatActivity {
             }
         });
 
+        //TODO add toolbar?
+        Toolbar toolbar = (Toolbar) findViewById(R.id.addToolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null && bundle.getInt(MODE) == MODE_ADD) {
             placeBegin = (Place)bundle.getSerializable(PLACE_BEGIN);
@@ -120,7 +130,17 @@ public class AddPlaceActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    //csvから目的地読み込み
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+                                                 //csvから目的地読み込み
     Boolean loadDistnations(String filename) {
         try {
 
