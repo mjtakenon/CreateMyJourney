@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -137,6 +138,9 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         //所要時間を計算
         setTimeRequired();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -176,6 +180,18 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCEL,intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // Intentから読み込み(=初回のみ使える)
     private void loadPlaces() {

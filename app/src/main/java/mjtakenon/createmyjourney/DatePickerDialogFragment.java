@@ -17,7 +17,7 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH)+1; // 0から始まるので＋1?
+        int month = c.get(Calendar.MONTH); // 0から始まるので＋1?
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         return new DatePickerDialog(getActivity(), this,  year, month, day);
@@ -25,7 +25,7 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        editText.setText(String.format("%04d",year)+"/"+String.format("%02d",month)+"/"+String.format("%02d",day));
+        editText.setText(String.format("%04d",year)+"/"+String.format("%02d",month+1)+"/"+String.format("%02d",day));
     }
 
     public void setEditText(EditText text) {

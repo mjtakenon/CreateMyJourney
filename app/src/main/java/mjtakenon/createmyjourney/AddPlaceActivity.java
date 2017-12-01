@@ -90,16 +90,10 @@ public class AddPlaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                Bundle bundle = intent.getExtras();
-                intent.putExtras(bundle);
                 setResult(RESULT_CANCEL,intent);
                 finish();
             }
         });
-
-        //TODO add toolbar?
-        Toolbar toolbar = (Toolbar) findViewById(R.id.addToolbar);
-        setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -135,6 +129,8 @@ public class AddPlaceActivity extends AppCompatActivity {
 
         switch(item.getItemId()) {
             case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCEL,intent);
                 finish();
                 return true;
         }

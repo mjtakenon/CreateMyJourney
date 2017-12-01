@@ -3,6 +3,7 @@ package mjtakenon.createmyjourney;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -90,7 +91,6 @@ public class NewActivity extends AppCompatActivity {
                 EditText textDurationDist = (EditText) findViewById(R.id.textDurationDist);
 
 
-
                 //入力終了、旅画面への移行
                 Bundle bundle = new Bundle();
                 bundle.putInt(MODE, MODE_NEW);
@@ -126,6 +126,23 @@ public class NewActivity extends AppCompatActivity {
         });
         //TODO GooglePlaceAPIのオートコンプリートを使いてえな
         //https://developers.google.com/places/android-api/?hl=ja
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCEL,intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setDateByCalendar(EditText text) {
