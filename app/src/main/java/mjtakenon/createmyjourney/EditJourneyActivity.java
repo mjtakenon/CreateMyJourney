@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +44,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import com.squareup.okhttp.Call;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -90,7 +95,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                         .setPositiveButton("決定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if(!saveJourney(viewJourneyName.getText().toString())) {
-                                    Toast.makeText(EditJourneyActivity.this,"保存ができませんでした(旅行名にコンマは入力できません)",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditJourneyActivity.this,"保存ができませんでした",Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 finish();
@@ -185,12 +190,21 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
 
         switch(item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent();
-                setResult(RESULT_CANCEL,intent);
                 finish();
+                return true;
+            case R.id.menu_share:
+                uploadJourney();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_editjourney, menu);
+
+        return true;
     }
 
     // Intentから読み込み(=初回のみ使える)
@@ -516,9 +530,9 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     //移動時間を計算
                     try {
                         if (places.get(n).getType().equals(Place.TYPE_BEGIN)) { //出発地だった場合
-                            dateBegin = FORMAT_TIME.parse(places.get(n).getDepartureTime());
+                            dateBegin = FORMAT_TIME.parse(places.get(n).getDepartTime());
                         } else {     //それ以外は前の場所の出発時刻を取得
-                            dateBegin = FORMAT_TIME.parse(places.get(n-1).getDepartureTime());
+                            dateBegin = FORMAT_TIME.parse(places.get(n-1).getDepartTime());
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -537,18 +551,18 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                     // 各Placeの時間を計算
                     // 同時にtextViewに表示するテキストを作成
                     if(places.get(n).getType().equals(Place.TYPE_BEGIN)) {
-                        places.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
-                        text = places.get(n).getDepartureTime() + "発";
+                        places.get(n).setDepartTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = places.get(n).getDepartTime() + "発";
                     } else if (places.get(n).getType().equals(Place.TYPE_DIST)) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
-                        places.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
+                        places.get(n).setarriveTime(FORMAT_TIME.format(calendar.getTime()));
                         calendar.add(Calendar.MINUTE, places.get(n).getDurationMinute());
-                        places.get(n).setDepartureTime(FORMAT_TIME.format(calendar.getTime()));
-                        text = places.get(n).getArrivalTime() + "着\n" + places.get(n).getDurationMinute() + "分滞在\n" + places.get(n).getDepartureTime() + "発";
+                        places.get(n).setDepartTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = places.get(n).getarriveTime() + "着\n" + places.get(n).getDurationMinute() + "分滞在\n" + places.get(n).getDepartTime() + "発";
                     } else if (places.get(n).getType().equals(Place.TYPE_END)) {
                         calendar.add(Calendar.SECOND, timeSecs.get(n - 1));
-                        places.get(n).setArrivalTime(FORMAT_TIME.format(calendar.getTime()));
-                        text = places.get(n).getArrivalTime() + "着";
+                        places.get(n).setarriveTime(FORMAT_TIME.format(calendar.getTime()));
+                        text = places.get(n).getarriveTime() + "着";
                     }
                     textView.setText(text);
                 }
@@ -673,6 +687,8 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
                 LatLng latLngEnd = new LatLng(
                         placeDirectionObject.getJSONObject("end_location").getDouble("lat"),
                         placeDirectionObject.getJSONObject("end_location").getDouble("lng"));
+
+                //TODO markerのクリックしたときのイベントを追加したい
                 marker.add(latLngEnd);
             }
 
@@ -712,33 +728,6 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
             journeys = (ArrayList<Journey>) objectInputStream.readObject();
             objectInputStream.close();
             inputStream.close();
-
-
-            //info,旅行名,旅行日時
-            /*outputStream.write((COLUMN_INFO + "," + journeyName + "," + getIntent().getExtras().getString(DATE_BEGIN) + "\n").getBytes());
-
-            for(Place place : journey.getPlaces()) {
-                //マーカーの座標を場所の座標に設定
-                String string = COLUMN_PLACE + "," + place.getName();
-                if(place.getArrivalTime() != null) {
-                    string += "," + place.getArrivalTime();
-                } else {
-                    string += ",";
-                }
-                if(place.getDurationMinute() != null) {
-                    string += "," + place.getDurationMinute();
-                } else {
-                    string += ",";
-                }
-                if(place.getDepartureTime() != null) {
-                    string += "," + place.getDepartureTime();
-                } else {
-                    string += ",";
-                }
-                string += "\n";
-                outputStream.write(string.getBytes());
-            }
-            */
         } catch (FileNotFoundException e) {
             journeys = new ArrayList<Journey>();
         } catch (IOException e) {
@@ -769,7 +758,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
     private class AddButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            int newId = v.getId()+1-ADDBUTTON_ID_BEGIN;
+            int newId = v.getId()-ADDBUTTON_ID_BEGIN+1;
             //Idは挿入する位置
             Bundle bundle = new Bundle();
             bundle.putInt(MODE,MODE_ADD);
@@ -782,6 +771,7 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    // プレイス追加
     private void insertPlace(Place place) {
         int insertPosition = place.getId();
         for(int n = insertPosition; n < journey.getPlaces().size(); n++) {
@@ -796,10 +786,97 @@ public class EditJourneyActivity extends AppCompatActivity implements OnMapReady
         setTimeRequired();
     }
 
+    // SQLサーバーにJourneyをUpしてリンクを作成
+    void uploadJourney() {
+        Integer id = null; //DBでの通し番号を取得
 
-    //private ArrayList<Place> listPlaces = new ArrayList<Place>();
+        //もし旅行名がなかったら(保存前だったら)旅行名を入力させる
+        if(journey.getName() == null) {
+            final EditText viewJourneyName = new EditText(EditJourneyActivity.this);
+            //旅の初期名は日付+目的地
+            if (getIntent().getExtras().getInt(MODE) == MODE_NEW) {
+                viewJourneyName.setText(getIntent().getExtras().getString(DATE_BEGIN) + " " + getIntent().getExtras().getString(PLACE_DIST));
+            } else if (getIntent().getExtras().getInt(MODE) == MODE_LOAD) {
+                viewJourneyName.setText(journey.getName());
+            }
+            //旅名を入れるダイアログ
+            new AlertDialog.Builder(EditJourneyActivity.this).setTitle("この旅行の名前を入力してください").setView(viewJourneyName)
+                    .setPositiveButton("決定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            journey.setName(viewJourneyName.getText().toString());
+                        }
+                    })
+                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            return;
+                        }
+                    })
+                    .show();
+        }
+
+        if(journey.getName() == null) {
+            Toast.makeText(EditJourneyActivity.this,"旅行名を入力しないとアップロードできません",Toast.LENGTH_LONG).show();
+        }
+
+        new AsyncTask<Void, Void, String>() {
+
+            String url = "http://myjourneytest.azurewebsites.net/upload.php";
+            JSONObject journeyObject = null;
+
+            @Override
+            protected void onPreExecute() {
+                 journeyObject = new JSONObject();
+                try {
+                    journeyObject.put("name",journey.getName());
+                    JSONArray jsonArray = new JSONArray();
+                    for ( Place place : journey.getPlaces() ) {
+                        jsonArray.put(place.toJSON());
+                    }
+                    journeyObject.put("places",jsonArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                OkHttpClient client = new OkHttpClient();
+
+                MediaType MIMEType= MediaType.parse("application/json; charset=utf-8");
+                String jsonstr = journeyObject.toString();
+                RequestBody requestBody = RequestBody.create (MIMEType,jsonstr);
+                Request request = new Request.Builder().url(url).post(requestBody).build();
+                Response response = null;
+                try {
+                    response = client.newCall(request).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (response == null) {
+                    return null;
+                }
+
+                String ret = response.body().toString();
+                //HTTPのヘッダだけしか返ってこない
+                return ret;
+            }
+
+            @Override
+            protected void onProgressUpdate(Void... params) {
+            }
+
+            @Override
+            protected void onPostExecute(String ret) {
+                Toast.makeText(EditJourneyActivity.this,ret,Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
+    }
+
+
     Journey journey;
 
+    //なんで保存してんの
     private JSONObject directionResponceJSON;
 
     private Boolean mapReady = false;

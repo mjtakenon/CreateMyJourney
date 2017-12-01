@@ -1,9 +1,13 @@
 package mjtakenon.createmyjourney;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -33,17 +37,10 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-//                .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
                 .taskExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                 .taskExecutorForCachedImages(AsyncTask.THREAD_POOL_EXECUTOR)
-//                .threadPoolSize(3) // default
-//                .threadPriority(Thread.NORM_PRIORITY - 1) // default
-//                .tasksProcessingOrder(QueueProcessingType.FIFO) // default
                 .denyCacheImageMultipleSizesInMemory()
-//                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // default
                 .memoryCacheSize(2 * 1024 * 1024)
-//                .imageDownloader(new BaseImageDownloader(this)) // default
-//                .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
                 .build();
         ImageLoader.getInstance().init(config);
 
@@ -70,11 +67,6 @@ public class MenuActivity extends AppCompatActivity {
 
                 bundle.putSerializable(JOURNEY, journeys.get(position));
 
-//                bundle.putString(JOURNEY_NAME,journeyNames.get(position));
-//                bundle.putString(DATE_BEGIN,dateBegin.get(position));
-//
-//                bundle.putSerializable(SERIAL_PLACES, listPlaces.get(position));
-
                 Intent intent = new Intent(getApplication(), EditJourneyActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -83,14 +75,26 @@ public class MenuActivity extends AppCompatActivity {
 
         listJourney.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ListView listView = (ListView) parent;
+            public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
+                final ListView listView = (ListView) parent;
                 //TODO 削除確認のダイヤログ
-//                journeyNames.remove(position);
-//                listPlaces.remove(position);
-                journeys.remove(position);
-                saveJourneyList();
-                loadJourneyList(listView);
+                new AlertDialog.Builder(MenuActivity.this)
+                        .setTitle("確認")
+                        .setMessage("削除しますか?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                journeys.remove(position);
+                                saveJourneyList();
+                                loadJourneyList(listView);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
                 return true;
             }
         });
@@ -150,9 +154,6 @@ public class MenuActivity extends AppCompatActivity {
         return true;
     }
 
-    /*private ArrayList<ArrayList<Place>> listPlaces = null;
-    private ArrayList<String> journeyNames = null;
-    private ArrayList<String> dateBegin = null;*/
     private ArrayList<Journey> journeys;
 }
 

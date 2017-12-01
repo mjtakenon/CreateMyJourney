@@ -2,6 +2,9 @@ package mjtakenon.createmyjourney;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 import mjtakenon.createmyjourney.Const.*;
@@ -15,9 +18,9 @@ public class Place implements Serializable{
 
     private Integer id;                  //訪れる時刻を変更するためのID
     private String  name;               //訪れる場所名
-    private String  arrivalTime;       //到着する時刻
+    private String  arriveTime;       //到着する時刻
     private Integer durationMinute;    //訪れている時間(分)
-    private String  departureTime;     //出発する時刻
+    private String  departTime;     //出発する時刻
     private transient LatLng  latLng;             //緯度経度
     private Integer type;               //場所の種類
 
@@ -25,9 +28,9 @@ public class Place implements Serializable{
         this.id = place.getId();
         this.type = place.getType();
         this.name = place.getName();
-        this.arrivalTime = place.getArrivalTime();
+        this.arriveTime = place.getarriveTime();
         this.durationMinute = place.getDurationMinute();
-        this.departureTime = place.getDepartureTime();
+        this.departTime = place.getDepartTime();
         this.latLng = place.getLatLng();
     }
 
@@ -35,9 +38,9 @@ public class Place implements Serializable{
         this.id = id;
         this.type = null;
         this.name = name;
-        this.arrivalTime = null;
+        this.arriveTime = null;
         this.durationMinute = null;
-        this.departureTime = null;
+        this.departTime = null;
         this.latLng = null;
     }
 
@@ -45,28 +48,28 @@ public class Place implements Serializable{
         this.id = id;
         this.type = type;
         this.name = name;
-        this.arrivalTime = null;
+        this.arriveTime = null;
         this.durationMinute = null;
-        this.departureTime = null;
+        this.departTime = null;
         this.latLng = null;
     }
 
-    public Place(Integer id, String name, Integer type, String arrivalTime, Integer durationMinute, String departureTime) {
+    public Place(Integer id, String name, Integer type, String arriveTime, Integer durationMinute, String departTime) {
         this.id = id;
         this.type = type;
         this.name = name;
-        this.arrivalTime = arrivalTime;
+        this.arriveTime = arriveTime;
         this.durationMinute = durationMinute;
-        this.departureTime = departureTime;
+        this.departTime = departTime;
         this.latLng = null;
     }
 
     public Integer getId() { return id; }
     public String getName() { return name; }
     public Integer getType() { return type; }
-    public String getArrivalTime() { return arrivalTime; }
+    public String getarriveTime() { return arriveTime; }
     public Integer getDurationMinute() { return durationMinute; }
-    public String getDepartureTime() { return departureTime; }
+    public String getDepartTime() { return departTime; }
     public LatLng getLatLng() { return latLng; }
 
     public Integer getAddButtonId() { return id + ADDBUTTON_ID_BEGIN; }
@@ -76,10 +79,21 @@ public class Place implements Serializable{
     public void setId(Integer id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setType(Integer type) { this.type = type; }
-    public void setArrivalTime(String arrivalTime) { this.arrivalTime = arrivalTime; }
+    public void setarriveTime(String arriveTime) { this.arriveTime = arriveTime; }
     public void setDurationMinute(Integer durationMinute) { this.durationMinute = durationMinute; }
-    public void setDepartureTime(String departureTime) { this.departureTime = departureTime; }
+    public void setDepartTime(String departTime) { this.departTime = departTime; }
     public void setLatLng(LatLng latlng) { this.latLng = latlng; }
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        jsonObject.put("type", type);
+        jsonObject.put("arriveTime", arriveTime);
+        jsonObject.put("durationMinute", durationMinute);
+        jsonObject.put("departTime", departTime);
+        return jsonObject;
+    }
 
     public static Integer TYPE_BEGIN =  0;
     public static Integer TYPE_DIST =   1;

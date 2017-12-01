@@ -272,7 +272,7 @@
                 android:id="@+id/buttonSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="検索" />
+                android:text="@string/search" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
